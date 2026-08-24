@@ -1,0 +1,45 @@
+### Universal ###
+# Common files that should be ignored in all projects
+
+# Logs
+*.log
+# Temporary files
+*.tmp
+*~
+
+*.bak
+# Environment files (containing secrets, API keys, credentials)
+.env
+*.env
+.env.*
+
+# Local configuration that shouldn't be shared
+*.local
+
+### Cpp ###
+# cpp specific files
+
+*.o
+*.out
+*.a
+
+### Clion ###
+# clion editor specific files
+
+# CLion
+.idea/
+*.iws
+*.iml
+*.ipr
+
+cmake-build-*/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/misc.xml
+
+.idea/modules.xml
+.idea/vcs.xml
+.idea/deployment.xml
+.idea/remote-targets.xml
+
