@@ -43,3 +43,10 @@ cmake-build-*/
 .idea/deployment.xml
 .idea/remote-targets.xml
 
+### Xmake ###
+# Xmake cache
+.xmake/
+build/
+
+# MacOS Cache
+.DS_Store
