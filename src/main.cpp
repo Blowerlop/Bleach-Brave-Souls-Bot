@@ -3,7 +3,7 @@
 #include "Process.h++"
 #include "Window.h++"
 
-int main(int argc, char** argv) {
+int main() {
     const auto pid = Process::FindProcessId("BleachBraveSouls.exe");
     std::cout << pid << std::endl;
 
