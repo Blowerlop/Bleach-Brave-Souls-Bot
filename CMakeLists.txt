@@ -42,5 +42,6 @@ endif()
 target_sources(Bleach-Brave-Souls-Bot PRIVATE 
     src/main.cpp
     src/Process.cpp
+    src/Window.cpp
 )
 
