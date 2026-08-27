@@ -5,13 +5,13 @@
 
 int main() {
     const auto pid = Process::FindProcessId("BleachBraveSouls.exe");
-    std::cout << pid << std::endl;
+    std::cout << "Process id :" << pid << std::endl;
 
     const auto windowHandle = Window::GetWindowHandleByProcessId(pid);
-    std::cout << windowHandle << std::endl;
 
     if (windowHandle != nullptr)
     {
+        ShowWindow(windowHandle, SW_RESTORE);
         SetForegroundWindow(windowHandle);
     }
 }
