@@ -12,6 +12,10 @@ set(CURRENT_COMPILER_ID ${CMAKE_CXX_COMPILER_ID})
 add_executable(Bleach-Brave-Souls-Bot "")
 set_target_properties(Bleach-Brave-Souls-Bot PROPERTIES OUTPUT_NAME "Bleach-Brave-Souls-Bot")
 set_target_properties(Bleach-Brave-Souls-Bot PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/windows/x64/release")
+target_include_directories(Bleach-Brave-Souls-Bot SYSTEM PRIVATE
+    C:/Users/chris/AppData/Local/.xmake/packages/o/opencv/4.11.0/c4bf395a2bc447ccb891fadb03cdd4dc/include
+    C:/Users/chris/AppData/Local/.xmake/packages/f/ffmpeg/7.1/013adb12212a465692dccd5cbbfbfe1f/include
+)
 target_compile_options(Bleach-Brave-Souls-Bot PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
     $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
@@ -38,10 +42,100 @@ if(CURRENT_COMPILER_ID STREQUAL "MSVC")
     set_property(TARGET Bleach-Brave-Souls-Bot PROPERTY
         MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 endif()
+target_link_libraries(Bleach-Brave-Souls-Bot PRIVATE
+    opencv_phase_unwrapping4110
+    opencv_surface_matching4110
+    opencv_saliency4110
+    opencv_wechat_qrcode4110
+    opencv_mcc4110
+    opencv_face4110
+    opencv_img_hash4110
+    opencv_videostab4110
+    opencv_structured_light4110
+    opencv_intensity_transform4110
+    opencv_ccalib4110
+    opencv_line_descriptor4110
+    opencv_stereo4110
+    opencv_dnn_objdetect4110
+    opencv_dnn_superres4110
+    opencv_fuzzy4110
+    opencv_hfs4110
+    opencv_rapid4110
+    opencv_bgsegm4110
+    opencv_bioinspired4110
+    opencv_rgbd4110
+    opencv_dpm4110
+    opencv_aruco4110
+    opencv_reg4110
+    opencv_tracking4110
+    opencv_datasets4110
+    opencv_xfeatures2d4110
+    opencv_shape4110
+    opencv_superres4110
+    opencv_plot4110
+    opencv_quality4110
+    opencv_text4110
+    opencv_optflow4110
+    opencv_ximgproc4110
+    opencv_xobjdetect4110
+    opencv_xphoto4110
+    opencv_stitching4110
+    opencv_ml4110
+    opencv_photo4110
+    opencv_gapi4110
+    opencv_objdetect4110
+    opencv_highgui4110
+    opencv_videoio4110
+    opencv_video4110
+    opencv_calib3d4110
+    opencv_dnn4110
+    opencv_features2d4110
+    opencv_flann4110
+    opencv_imgcodecs4110
+    opencv_imgproc4110
+    opencv_core4110
+    ade
+    libjpeg-turbo
+    libpng
+    libprotobuf
+    libtiff
+    libwebp
+    quirc
+    zlib
+    avfilter
+    avdevice
+    avformat
+    avcodec
+    swscale
+    swresample
+    avutil
+    postproc
+    user32
+    d3d11
+    dxgi
+    gdi32
+    glu32
+    opengl32
+    advapi32
+    comdlg32
+    ws2_32
+    Bcrypt
+    Mfplat
+    mfuuid
+    Ole32
+    Secur32
+    Strmiids
+    User32
+)
+target_link_directories(Bleach-Brave-Souls-Bot PRIVATE
+    C:/Users/chris/AppData/Local/.xmake/packages/o/opencv/4.11.0/c4bf395a2bc447ccb891fadb03cdd4dc/x64/vc17/staticlib
+    C:/Users/chris/AppData/Local/.xmake/packages/f/ffmpeg/7.1/013adb12212a465692dccd5cbbfbfe1f/lib
+)
 # private sourcefiles from sourcebatch c++.build for target Bleach-Brave-Souls-Bot
 target_sources(Bleach-Brave-Souls-Bot PRIVATE 
     src/main.cpp
     src/Process.cpp
+    src/Screenshot.cpp
     src/Window.cpp
 )
 
