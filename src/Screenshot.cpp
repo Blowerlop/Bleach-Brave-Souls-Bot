@@ -1,41 +1,106 @@
 ﻿#include "Screenshot.h++"
 
+#include <iostream>
 
-cv::Mat Screenshot::Window(HWND hwnd)
+
+int Screenshot::Window(HWND hWnd)
 {
-    cv::Mat src;
+    HDC hdcWindow;
+    HDC hdcMemDC = nullptr;
+    HBITMAP hbmScreen = nullptr;
+    BITMAP bmpScreen;
+    DWORD dwBytesWritten = 0;
+    DWORD dwSizeofDIB = 0;
+    HANDLE hFile = nullptr;
+    char* lpbitmap = nullptr;
+    HANDLE hDIB = nullptr;
+    DWORD dwBmpSize = 0;
 
-    // get handles to a device context (DC)
-    HDC hwindowDC = GetDC(hwnd);
-    HDC hwindowCompatibleDC = CreateCompatibleDC(hwindowDC);
-    SetStretchBltMode(hwindowCompatibleDC, COLORONCOLOR);
+    hdcWindow = GetWindowDC(hWnd);
 
-    // define scale, height and width
-    int screenx = GetSystemMetrics(SM_XVIRTUALSCREEN);
-    int screeny = GetSystemMetrics(SM_YVIRTUALSCREEN);
-    int width = GetSystemMetrics(SM_CXVIRTUALSCREEN);
-    int height = GetSystemMetrics(SM_CYVIRTUALSCREEN);
+    hdcMemDC = CreateCompatibleDC(hdcWindow);
 
-    // create mat object
-    src.create(height, width, CV_8UC4);
+    if (!hdcMemDC)
+    {
+        std::cerr << "CreateCompatibleDC has failed" << std::endl;
+        goto done;
+    }
 
-    // create a bitmap
-    HBITMAP hbwindow = CreateCompatibleBitmap(hwindowDC, width, height);
-    BITMAPINFOHEADER bi = createBitmapHeader(width, height);
+    RECT rcWindow;
+    GetWindowRect(hWnd, &rcWindow);
+    int width = rcWindow.right - rcWindow.left;
+    int height = rcWindow.bottom - rcWindow.top;
 
-    // use the previously created device context with the bitmap
-    SelectObject(hwindowCompatibleDC, hbwindow);
+    hbmScreen = CreateCompatibleBitmap(hdcWindow, width, height);
 
-    // copy from the window device context to the bitmap device context
-    StretchBlt(hwindowCompatibleDC, 0, 0, width, height, hwindowDC, screenx, screeny, width, height, SRCCOPY);  //change SRCCOPY to NOTSRCCOPY for wacky colors !
-    GetDIBits(hwindowCompatibleDC, hbwindow, 0, height, src.data, (BITMAPINFO*)&bi, DIB_RGB_COLORS);            //copy from hwindowCompatibleDC to hbwindow
+    if (!hbmScreen)
+    {
+        std::cerr << "CreateCompatibleBitmap Failed" << std::endl;
+        goto done;
+    }
 
-    // avoid memory leak
-    DeleteObject(hbwindow);
-    DeleteDC(hwindowCompatibleDC);
-    ReleaseDC(hwnd, hwindowDC);
+    SelectObject(hdcMemDC, hbmScreen);
 
-    return src;
+    if (!PrintWindow(hWnd, hdcMemDC, PW_RENDERFULLCONTENT))
+    {
+        std::cerr << "PrintWindow has failed" << std::endl;
+        goto done;
+    }
+
+    GetObject(hbmScreen, sizeof(BITMAP), &bmpScreen);
+
+    BITMAPFILEHEADER   bmfHeader;
+    BITMAPINFOHEADER   bi;
+
+    bi.biSize = sizeof(BITMAPINFOHEADER);
+    bi.biWidth = bmpScreen.bmWidth;
+    bi.biHeight = bmpScreen.bmHeight;
+    bi.biPlanes = 1;
+    bi.biBitCount = 32;
+    bi.biCompression = BI_RGB;
+    bi.biSizeImage = 0;
+    bi.biXPelsPerMeter = 0;
+    bi.biYPelsPerMeter = 0;
+    bi.biClrUsed = 0;
+    bi.biClrImportant = 0;
+
+    dwBmpSize = ((bmpScreen.bmWidth * bi.biBitCount + 31) / 32) * 4 * bmpScreen.bmHeight;
+
+    hDIB = GlobalAlloc(GHND, dwBmpSize);
+    lpbitmap = (char*)GlobalLock(hDIB);
+
+    GetDIBits(hdcMemDC, hbmScreen, 0,
+        (UINT)bmpScreen.bmHeight,
+        lpbitmap,
+        (BITMAPINFO*)&bi, DIB_RGB_COLORS);
+
+    hFile = CreateFile("capture.bmp",
+        GENERIC_WRITE,
+        0,
+        nullptr,
+        CREATE_ALWAYS,
+        FILE_ATTRIBUTE_NORMAL, nullptr);
+
+    dwSizeofDIB = dwBmpSize + sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+    bmfHeader.bfOffBits = (DWORD)sizeof(BITMAPFILEHEADER) + (DWORD)sizeof(BITMAPINFOHEADER);
+    bmfHeader.bfSize = dwSizeofDIB;
+    bmfHeader.bfType = 0x4D42; // "BM"
+
+    WriteFile(hFile, (LPSTR)&bmfHeader, sizeof(BITMAPFILEHEADER), &dwBytesWritten, nullptr);
+    WriteFile(hFile, (LPSTR)&bi, sizeof(BITMAPINFOHEADER), &dwBytesWritten, nullptr);
+    WriteFile(hFile, (LPSTR)lpbitmap, dwBmpSize, &dwBytesWritten, nullptr);
+
+    GlobalUnlock(hDIB);
+    GlobalFree(hDIB);
+
+    CloseHandle(hFile);
+
+done:
+    DeleteObject(hbmScreen);
+    DeleteDC(hdcMemDC);
+    ReleaseDC(hWnd, hdcWindow);
+
+    return 0;
 }
 
 BITMAPINFOHEADER Screenshot::createBitmapHeader(int width, int height)
@@ -45,7 +110,7 @@ BITMAPINFOHEADER Screenshot::createBitmapHeader(int width, int height)
     // create a bitmap
     bi.biSize = sizeof(BITMAPINFOHEADER);
     bi.biWidth = width;
-    bi.biHeight = -height;  //this is the line that makes it draw upside down or not
+    bi.biHeight = -height;
     bi.biPlanes = 1;
     bi.biBitCount = 32;
     bi.biCompression = BI_RGB;

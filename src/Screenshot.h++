@@ -7,7 +7,7 @@ class Screenshot {
     public:
         Screenshot() = delete;
 
-        static cv::Mat Window(HWND hwnd);
+        static int Window(HWND hWnd);
 
     private:
         static BITMAPINFOHEADER createBitmapHeader(int width, int height);

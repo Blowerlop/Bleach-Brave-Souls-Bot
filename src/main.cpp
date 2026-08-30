@@ -23,15 +23,7 @@ int main()
     ShowWindow(windowHandle, SW_RESTORE);
     SetForegroundWindow(windowHandle);
 
-    const cv::Mat src = Screenshot::Window(windowHandle);
-
-    std::vector<uchar> buf;
-    cv::imencode(".png", src, buf);
-
-    // save img
-    cv::imwrite("Screenshot.png", src);
-
-    buf.clear();
+    Screenshot::Window(windowHandle);
 
     return 0;
 }
