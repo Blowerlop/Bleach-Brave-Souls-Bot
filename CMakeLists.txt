@@ -29,6 +29,8 @@ elseif(CURRENT_COMPILER_ID STREQUAL "Clang")
 elseif(CURRENT_COMPILER_ID STREQUAL "GNU")
     target_compile_options(Bleach-Brave-Souls-Bot PRIVATE -fexceptions)
 endif()
+set_target_properties(Bleach-Brave-Souls-Bot PROPERTIES CXX_EXTENSIONS OFF)
+target_compile_features(Bleach-Brave-Souls-Bot PRIVATE cxx_std_23)
 if(CURRENT_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(Bleach-Brave-Souls-Bot PRIVATE $<$<CONFIG:Release>:-O2>)
 else()
@@ -111,8 +113,6 @@ target_link_libraries(Bleach-Brave-Souls-Bot PRIVATE
     avutil
     postproc
     user32
-    d3d11
-    dxgi
     gdi32
     glu32
     opengl32
@@ -137,6 +137,7 @@ target_sources(Bleach-Brave-Souls-Bot PRIVATE
     src/main.cpp
     src/Process.cpp
     src/Screenshot.cpp
+    src/TemplateMatching.cpp
     src/Window.cpp
 )
 
