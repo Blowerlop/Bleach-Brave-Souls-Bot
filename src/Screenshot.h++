@@ -1,14 +1,11 @@
 ﻿#pragma once
 
-#include <opencv2/core/mat.hpp>
 #include "Window.h++"
 
 class Screenshot {
     public:
         Screenshot() = delete;
+        ~Screenshot() = delete;
 
-        static int Window(HWND hWnd);
-
-    private:
-        static BITMAPINFOHEADER createBitmapHeader(int width, int height);
+        static HBITMAP Window(HWND hWnd);
 };

@@ -133,6 +133,7 @@ target_link_directories(Bleach-Brave-Souls-Bot PRIVATE
 )
 # private sourcefiles from sourcebatch c++.build for target Bleach-Brave-Souls-Bot
 target_sources(Bleach-Brave-Souls-Bot PRIVATE 
+    src/BitmapConverter.cpp
     src/main.cpp
     src/Process.cpp
     src/Screenshot.cpp
