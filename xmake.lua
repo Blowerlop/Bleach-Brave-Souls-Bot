@@ -7,6 +7,7 @@ target("Bleach-Brave-Souls-Bot")
     add_files("src/*.cpp")
     add_syslinks("user32")
     add_packages("opencv")
+    add_defines("NOMINMAX")
 
     after_build(function (target)
             os.cp("assets", path.join(target:targetdir(), "assets"))

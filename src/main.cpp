@@ -1,44 +1,29 @@
-#include "opencv2/opencv.hpp"
-#include "BitmapConverter.h++"
-#include "Process.h++"
-#include "Screenshot.h++"
-#include "TemplateMatching.h++"
-#include "Window.h++"
+#include <filesystem>
+#include <iostream>
+#include <ostream>
 
+#include "AssetsManager.h++"
+#include "Process.h++"
+#include "StoryQuest.h++"
+
+
+void LoadAllAssets()
+{
+    const std::string path = "assets/";
+    for (const auto & entry : std::filesystem::directory_iterator(path))
+    {
+        if (entry.path().extension() != ".jpg" && entry.path().extension() != ".png") continue;
+
+        AssetsManager::Load(entry.path().string());
+    }
+}
 
 int main()
 {
-    const auto pid = Process::FindProcessId("BleachBraveSouls.exe");
-    if (pid == 0)
-    {
-        std::cerr << "Game process not found." << std::endl;
-        return 1;
-    }
+    LoadAllAssets();
 
-    const auto windowHandle = Window::GetWindowHandleByProcessId(pid);
-
-    if (windowHandle == nullptr)
-    {
-        std::cerr << "Game window not found." << std::endl;
-        return 1;
-    }
-
-    ShowWindow(windowHandle, SW_RESTORE);
-    SetForegroundWindow(windowHandle);
-
-    HBITMAP hbitmap = Screenshot::Window(windowHandle);
-    cv::Mat gameScreenshotMat = BitmapConverter::ToMat(hbitmap);
-    DeleteObject(hbitmap);
-
-    cv::Mat template_ = cv::imread("assets/Screenshot_1.jpg");
-
-    cv::Point coordinate{};
-    bool hasMatch = TemplateMatching::match(gameScreenshotMat, template_, coordinate, true);
-    std::cout << "Has match: " << std::boolalpha << hasMatch << std::endl;
-    if (hasMatch)
-    {
-        std::cout << "Match coordinate: (" << coordinate.x << ", " << coordinate.y << ")" << std::endl;
-    }
+    StoryQuest storyQuest {};
+    storyQuest.Start();
 
     return 0;
 }
