@@ -13,8 +13,20 @@ add_executable(Bleach-Brave-Souls-Bot "")
 set_target_properties(Bleach-Brave-Souls-Bot PROPERTIES OUTPUT_NAME "Bleach-Brave-Souls-Bot")
 set_target_properties(Bleach-Brave-Souls-Bot PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/windows/x64/release")
 target_include_directories(Bleach-Brave-Souls-Bot SYSTEM PRIVATE
-    C:/Users/chris/AppData/Local/.xmake/packages/o/opencv/4.11.0/c4bf395a2bc447ccb891fadb03cdd4dc/include
-    C:/Users/chris/AppData/Local/.xmake/packages/f/ffmpeg/7.1/013adb12212a465692dccd5cbbfbfe1f/include
+    C:/Users/chris/AppData/Local/.xmake/packages/o/opencv/4.14.0/1b1344194f324a23a4d25c97a6651fb3/include
+    C:/Users/chris/AppData/Local/.xmake/packages/f/ffmpeg/7.1/321bff2a86b249779be8ee863d662c50/include
+    C:/Users/chris/AppData/Local/.xmake/packages/e/eigen/5.0.1/60cb40bd086c4c96b9551ce6ccff0e36/include
+    C:/Users/chris/AppData/Local/.xmake/packages/e/eigen/5.0.1/60cb40bd086c4c96b9551ce6ccff0e36/include/eigen3
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9/83a8c0c085bb4b2ea867c42998be39d4/include
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9/83a8c0c085bb4b2ea867c42998be39d4/include/imgui
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9/83a8c0c085bb4b2ea867c42998be39d4/include/backends
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9/83a8c0c085bb4b2ea867c42998be39d4/include/misc/cpp
+    C:/Users/chris/AppData/Local/.xmake/packages/g/glfw/3.4/d59f6dd71e7647cc95d2c1d35e51a39a/include
+    C:/Users/chris/AppData/Local/.xmake/packages/v/vulkan-headers/1.4.335+0/9a6e360bbd30447880dba7b3b100d7dc/include
+)
+target_compile_definitions(Bleach-Brave-Souls-Bot PRIVATE
+    NOMINMAX
+    GLFW_INCLUDE_NONE
 )
 target_compile_options(Bleach-Brave-Souls-Bot PRIVATE
     $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
@@ -45,57 +57,57 @@ if(CURRENT_COMPILER_ID STREQUAL "MSVC")
         MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 endif()
 target_link_libraries(Bleach-Brave-Souls-Bot PRIVATE
-    opencv_phase_unwrapping4110
-    opencv_surface_matching4110
-    opencv_saliency4110
-    opencv_wechat_qrcode4110
-    opencv_mcc4110
-    opencv_face4110
-    opencv_img_hash4110
-    opencv_videostab4110
-    opencv_structured_light4110
-    opencv_intensity_transform4110
-    opencv_ccalib4110
-    opencv_line_descriptor4110
-    opencv_stereo4110
-    opencv_dnn_objdetect4110
-    opencv_dnn_superres4110
-    opencv_fuzzy4110
-    opencv_hfs4110
-    opencv_rapid4110
-    opencv_bgsegm4110
-    opencv_bioinspired4110
-    opencv_rgbd4110
-    opencv_dpm4110
-    opencv_aruco4110
-    opencv_reg4110
-    opencv_tracking4110
-    opencv_datasets4110
-    opencv_xfeatures2d4110
-    opencv_shape4110
-    opencv_superres4110
-    opencv_plot4110
-    opencv_quality4110
-    opencv_text4110
-    opencv_optflow4110
-    opencv_ximgproc4110
-    opencv_xobjdetect4110
-    opencv_xphoto4110
-    opencv_stitching4110
-    opencv_ml4110
-    opencv_photo4110
-    opencv_gapi4110
-    opencv_objdetect4110
-    opencv_highgui4110
-    opencv_videoio4110
-    opencv_video4110
-    opencv_calib3d4110
-    opencv_dnn4110
-    opencv_features2d4110
-    opencv_flann4110
-    opencv_imgcodecs4110
-    opencv_imgproc4110
-    opencv_core4110
+    opencv_phase_unwrapping4140
+    opencv_surface_matching4140
+    opencv_saliency4140
+    opencv_wechat_qrcode4140
+    opencv_mcc4140
+    opencv_face4140
+    opencv_img_hash4140
+    opencv_videostab4140
+    opencv_structured_light4140
+    opencv_intensity_transform4140
+    opencv_ccalib4140
+    opencv_line_descriptor4140
+    opencv_stereo4140
+    opencv_dnn_objdetect4140
+    opencv_dnn_superres4140
+    opencv_fuzzy4140
+    opencv_hfs4140
+    opencv_rapid4140
+    opencv_bgsegm4140
+    opencv_bioinspired4140
+    opencv_rgbd4140
+    opencv_dpm4140
+    opencv_aruco4140
+    opencv_reg4140
+    opencv_tracking4140
+    opencv_datasets4140
+    opencv_xfeatures2d4140
+    opencv_shape4140
+    opencv_superres4140
+    opencv_plot4140
+    opencv_quality4140
+    opencv_text4140
+    opencv_optflow4140
+    opencv_ximgproc4140
+    opencv_xobjdetect4140
+    opencv_xphoto4140
+    opencv_stitching4140
+    opencv_ml4140
+    opencv_photo4140
+    opencv_gapi4140
+    opencv_objdetect4140
+    opencv_highgui4140
+    opencv_videoio4140
+    opencv_video4140
+    opencv_calib3d4140
+    opencv_dnn4140
+    opencv_features2d4140
+    opencv_flann4140
+    opencv_imgcodecs4140
+    opencv_imgproc4140
+    opencv_core4140
     ade
     libjpeg-turbo
     libpng
@@ -112,6 +124,10 @@ target_link_libraries(Bleach-Brave-Souls-Bot PRIVATE
     swresample
     avutil
     postproc
+    imgui
+    glfw3
+    opengl32
+    vulkan-1
     user32
     gdi32
     glu32
@@ -119,6 +135,7 @@ target_link_libraries(Bleach-Brave-Souls-Bot PRIVATE
     advapi32
     comdlg32
     ws2_32
+    ole32
     Bcrypt
     Mfplat
     mfuuid
@@ -126,17 +143,26 @@ target_link_libraries(Bleach-Brave-Souls-Bot PRIVATE
     Secur32
     Strmiids
     User32
+    imm32
+    shell32
 )
 target_link_directories(Bleach-Brave-Souls-Bot PRIVATE
-    C:/Users/chris/AppData/Local/.xmake/packages/o/opencv/4.11.0/c4bf395a2bc447ccb891fadb03cdd4dc/x64/vc17/staticlib
-    C:/Users/chris/AppData/Local/.xmake/packages/f/ffmpeg/7.1/013adb12212a465692dccd5cbbfbfe1f/lib
+    C:/Users/chris/AppData/Local/.xmake/packages/o/opencv/4.14.0/1b1344194f324a23a4d25c97a6651fb3/x64/vc17/staticlib
+    C:/Users/chris/AppData/Local/.xmake/packages/f/ffmpeg/7.1/321bff2a86b249779be8ee863d662c50/lib
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9/83a8c0c085bb4b2ea867c42998be39d4/lib
+    C:/Users/chris/AppData/Local/.xmake/packages/g/glfw/3.4/d59f6dd71e7647cc95d2c1d35e51a39a/lib
+    C:/Users/chris/AppData/Local/.xmake/packages/v/vulkan-loader/1.4.335+0/faac6c747f5f4c18b32d2c968be37765/lib
 )
 # private sourcefiles from sourcebatch c++.build for target Bleach-Brave-Souls-Bot
 target_sources(Bleach-Brave-Souls-Bot PRIVATE 
+    src/AssetsManager.cpp
+    src/AutoClicker.cpp
+    src/Automator.cpp
     src/BitmapConverter.cpp
     src/main.cpp
     src/Process.cpp
     src/Screenshot.cpp
+    src/StoryQuest.cpp
     src/TemplateMatching.cpp
     src/Window.cpp
 )
