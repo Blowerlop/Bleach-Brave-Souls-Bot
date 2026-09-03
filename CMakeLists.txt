@@ -17,10 +17,10 @@ target_include_directories(Bleach-Brave-Souls-Bot SYSTEM PRIVATE
     C:/Users/chris/AppData/Local/.xmake/packages/f/ffmpeg/7.1/321bff2a86b249779be8ee863d662c50/include
     C:/Users/chris/AppData/Local/.xmake/packages/e/eigen/5.0.1/60cb40bd086c4c96b9551ce6ccff0e36/include
     C:/Users/chris/AppData/Local/.xmake/packages/e/eigen/5.0.1/60cb40bd086c4c96b9551ce6ccff0e36/include/eigen3
-    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9/83a8c0c085bb4b2ea867c42998be39d4/include
-    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9/83a8c0c085bb4b2ea867c42998be39d4/include/imgui
-    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9/83a8c0c085bb4b2ea867c42998be39d4/include/backends
-    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9/83a8c0c085bb4b2ea867c42998be39d4/include/misc/cpp
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/263a39cd1a204a72b22c4efe942b5e31/include
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/263a39cd1a204a72b22c4efe942b5e31/include/imgui
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/263a39cd1a204a72b22c4efe942b5e31/include/backends
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/263a39cd1a204a72b22c4efe942b5e31/include/misc/cpp
     C:/Users/chris/AppData/Local/.xmake/packages/g/glfw/3.4/d59f6dd71e7647cc95d2c1d35e51a39a/include
     C:/Users/chris/AppData/Local/.xmake/packages/v/vulkan-headers/1.4.335+0/9a6e360bbd30447880dba7b3b100d7dc/include
 )
@@ -149,7 +149,7 @@ target_link_libraries(Bleach-Brave-Souls-Bot PRIVATE
 target_link_directories(Bleach-Brave-Souls-Bot PRIVATE
     C:/Users/chris/AppData/Local/.xmake/packages/o/opencv/4.14.0/1b1344194f324a23a4d25c97a6651fb3/x64/vc17/staticlib
     C:/Users/chris/AppData/Local/.xmake/packages/f/ffmpeg/7.1/321bff2a86b249779be8ee863d662c50/lib
-    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9/83a8c0c085bb4b2ea867c42998be39d4/lib
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/263a39cd1a204a72b22c4efe942b5e31/lib
     C:/Users/chris/AppData/Local/.xmake/packages/g/glfw/3.4/d59f6dd71e7647cc95d2c1d35e51a39a/lib
     C:/Users/chris/AppData/Local/.xmake/packages/v/vulkan-loader/1.4.335+0/faac6c747f5f4c18b32d2c968be37765/lib
 )
