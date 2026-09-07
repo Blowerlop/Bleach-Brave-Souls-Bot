@@ -1,10 +1,10 @@
-﻿#include "StoryQuest.h++"
+﻿#include "StoryQuestAutomator.h++"
 
-StoryQuest::StoryQuest() : Automator()
+StoryQuestAutomator::StoryQuestAutomator() : Automator()
 {
 }
 
-void StoryQuest::Update()
+void StoryQuestAutomator::Update()
 {
     Automator::Update();
 

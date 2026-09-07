@@ -4,12 +4,12 @@
 #include <iostream>
 
 #include "opencv2/core.hpp"
-#include "AssetsManager.h++"
-#include "AutoClicker.h++"
-#include "Process.h++"
-#include "Screenshot.h++"
-#include "Settings.h++"
-#include "TemplateMatching.h++"
+#include "../AssetsManager.h++"
+#include "../AutoClicker.h++"
+#include "../Process.h++"
+#include "../Screenshot.h++"
+#include "../Settings.h++"
+#include "../TemplateMatching.h++"
 
 
 void Automator::Start()

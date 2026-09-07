@@ -22,9 +22,9 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
-#include "Automator.h++"
+#include "Automator/Automator.h++"
 #include "Settings.h++"
-#include "StoryQuest.h++"
+#include "Automator/StoryQuestAutomator.h++"
 
 // Volk headers
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
@@ -518,7 +518,7 @@ int main(int, char**)
 
         if (ImGui::Button("Story"))
         {
-            automator = new StoryQuest();
+            automator = new StoryQuestAutomator();
         }
         ImGui::Button("Sub Stories");
         ImGui::Button("Retry");

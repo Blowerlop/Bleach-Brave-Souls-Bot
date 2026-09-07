@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "BitmapConverter.h++"
+#include "../BitmapConverter.h++"
 
 
 class Automator

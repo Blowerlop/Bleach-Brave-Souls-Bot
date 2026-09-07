@@ -5,7 +5,7 @@ add_requires("imgui 1.92.9-docking", {configs = {glfw = true, vulkan = true}})
 
 target("Bleach-Brave-Souls-Bot")
     set_kind("binary")
-    add_files("src/*.cpp")
+    add_files("src/**.cpp")
     add_syslinks("user32")
     add_packages("opencv", "imgui", "vulkan-loader")
     add_defines("NOMINMAX")

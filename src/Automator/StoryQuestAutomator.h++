@@ -2,10 +2,10 @@
 #include "Automator.h++"
 
 
-class StoryQuest final : public Automator
+class StoryQuestAutomator final : public Automator
 {
     public:
-        StoryQuest();
+        StoryQuestAutomator();
 
         void Update() override;
 };

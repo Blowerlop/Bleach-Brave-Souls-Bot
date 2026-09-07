@@ -157,12 +157,12 @@ target_link_directories(Bleach-Brave-Souls-Bot PRIVATE
 target_sources(Bleach-Brave-Souls-Bot PRIVATE 
     src/AssetsManager.cpp
     src/AutoClicker.cpp
-    src/Automator.cpp
+    src/Automator/Automator.cpp
+    src/Automator/StoryQuestAutomator.cpp
     src/BitmapConverter.cpp
     src/main.cpp
     src/Process.cpp
     src/Screenshot.cpp
-    src/StoryQuest.cpp
     src/TemplateMatching.cpp
     src/Window.cpp
 )
