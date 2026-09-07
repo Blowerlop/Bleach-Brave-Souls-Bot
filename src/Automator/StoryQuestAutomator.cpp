@@ -1,5 +1,9 @@
 ﻿#include "StoryQuestAutomator.h++"
 
+#include <atomic>
+
+#include "../Settings.h++"
+
 StoryQuestAutomator::StoryQuestAutomator() : Automator()
 {
 }
@@ -17,7 +21,10 @@ void StoryQuestAutomator::Update()
     }
 
     // Immediate action. Don't need to wait for a loading before doing anything so don't return.
-    if (DoesScreenshotMatchTemplate("assets/use_stats_boost.jpg", coordinate)) PointAndClick(coordinate);
+    if (Settings::useStatsBoost.load() && DoesScreenshotMatchTemplate("assets/use_stats_boost.jpg", coordinate))
+    {
+        PointAndClick(coordinate);
+    }
 
     if (DoesScreenshotMatchTemplate("assets/StartQuest.jpg", coordinate))
     {
