@@ -34,7 +34,7 @@ void Automator::Run()
     {
         Update();
 
-        std::chrono::duration<float> duration{Settings::automatorUpdateDelayInSeconds};
+        std::chrono::duration<float> duration{Settings::automatorUpdateDelayInSeconds.load()};
         std::this_thread::sleep_for(duration);
     }
 }
