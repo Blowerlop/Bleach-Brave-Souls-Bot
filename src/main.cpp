@@ -505,8 +505,14 @@ int main(int, char**)
 
         ImGui::Text("Options");
 
-        ImGui::InputFloat("Automator update delay in seconds", &Settings::automatorUpdateDelayInSeconds);
-        ImGui::Checkbox("Use stats boost", &Settings::useStatsBoost);
+        if (float temp = Settings::automatorUpdateDelayInSeconds.load(); ImGui::InputFloat("Automator update delay in seconds", &temp))
+        {
+            Settings::automatorUpdateDelayInSeconds.store(temp);
+        }
+        if (bool temp = Settings::useStatsBoost.load(); ImGui::Checkbox("Use stats boost", &temp))
+        {
+            Settings::useStatsBoost.store(temp);
+        }
 
         ImGui::EndChild();
 
