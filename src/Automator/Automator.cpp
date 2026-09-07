@@ -1,6 +1,6 @@
 ﻿#include "Automator.h++"
 
-#include <imgui.h>
+#include <condition_variable>
 #include <iostream>
 #include <thread>
 
@@ -26,16 +26,26 @@ void Automator::Update()
     DeleteObject(hbitmap);
 }
 
-void Automator::Run()
+void Automator::Run(const std::stop_token& stopToken)
 {
+    std::condition_variable conditionVariable;
+    std::mutex mutex;
+    std::unique_lock lock(mutex);
+
     Start();
 
-    while (true)
+    while (!stopToken.stop_requested())
     {
         Update();
 
-        std::chrono::duration<float> duration{Settings::automatorUpdateDelayInSeconds.load()};
-        std::this_thread::sleep_for(duration);
+        conditionVariable.wait_for(
+            lock,
+            std::chrono::duration<float>{Settings::automatorUpdateDelayInSeconds.load()},
+            [&stopToken]
+            {
+                return stopToken.stop_requested();
+            }
+        );
     }
 }
 
@@ -78,4 +88,3 @@ bool Automator::DoesScreenshotMatchTemplate(const cv::String& file, cv::Point& c
 {
     return TemplateMatching::match(currentScreenshotMat, AssetsManager::Load(file), coordinate, false);
 }
-

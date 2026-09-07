@@ -10,9 +10,9 @@ void AutomatorController::SetNewAutomator(std::unique_ptr<Automator> automator_)
 
 void AutomatorController::StartAutomator()
 {
-    automatorThead = std::jthread([this]
+    automatorThead = std::jthread([this](const std::stop_token& stopToken)
     {
-        automator->Run();
+        automator->Run(stopToken);
     });
 }
 

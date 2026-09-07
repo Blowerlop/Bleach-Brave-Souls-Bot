@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include <stop_token>
+
 #include "../BitmapConverter.h++"
 
 
@@ -7,7 +9,7 @@ class Automator
     public:
         virtual ~Automator() = default;
 
-        void Run();
+        void Run(const std::stop_token& stopToken);
 
         bool DoesScreenshotMatchTemplate(const cv::String& file, cv::Point& coordinate) const;
         void PointAndClick(cv::Point coordinate) const;
