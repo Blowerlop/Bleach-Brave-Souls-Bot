@@ -500,7 +500,7 @@ int main(int, char**)
         float fullWidth = ImGui::GetContentRegionAvail().x;
         float leftWidth = fullWidth * 0.5f;
 
-        ImGui::BeginChild("Options", ImVec2(leftWidth, 0), ImGuiChildFlags_Borders);
+        ImGui::BeginChild("Options", ImVec2(leftWidth, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY);
 
         ImGui::Text("Options");
 
@@ -512,7 +512,7 @@ int main(int, char**)
         ImGui::SameLine();
 
 
-        ImGui::BeginChild("Quests", ImVec2(0, 0), ImGuiChildFlags_Borders);
+        ImGui::BeginChild("Quests", ImVec2(0, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY);
 
         ImGui::Text("Automate");
 
@@ -527,11 +527,15 @@ int main(int, char**)
 
         if (automator != nullptr)
         {
-            if (ImGui::Button("Stop"))
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+
+            if (ImGui::Button("Stop automate"))
             {
                 delete automator;
                 automator = nullptr;
             }
+
+            ImGui::PopStyleColor();
         }
 
         ImGui::End();
