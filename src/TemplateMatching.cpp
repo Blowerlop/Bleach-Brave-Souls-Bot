@@ -34,8 +34,7 @@ bool TemplateMatching::match(const cv::Mat& image, const cv::Mat& template_, cv:
         drawMatch(image, template_, matchPoint, centerPoint, maxValue);
     }
 
-    if (maxValue < THRESHOLD) return false;
-    return true;
+    return maxValue >= THRESHOLD;
 }
 
 void TemplateMatching::drawMatch(const cv::Mat& image, const cv::Mat& template_, const cv::Point& matchPoint,

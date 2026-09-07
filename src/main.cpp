@@ -22,6 +22,10 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+#include "Automator.h++"
+#include "Settings.h++"
+#include "StoryQuest.h++"
+
 // Volk headers
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
 #define VOLK_IMPLEMENTATION
@@ -349,6 +353,9 @@ static void FramePresent(ImGui_ImplVulkanH_Window* wd)
     wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->SemaphoreCount; // Now we can use the next set of semaphores
 }
 
+static Automator* automator;
+
+
 // Main code
 int main(int, char**)
 {
@@ -451,9 +458,6 @@ int main(int, char**)
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf");
     //IM_ASSERT(font != nullptr);
 
-    // Our state
-    bool show_demo_window = true;
-    bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Main loop
@@ -487,6 +491,10 @@ int main(int, char**)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+
+        // First implementation
+        // TODO: Better implementation
+
         ImGui::Begin("Bleach Brave Souls bot");
 
         float fullWidth = ImGui::GetContentRegionAvail().x;
@@ -496,8 +504,8 @@ int main(int, char**)
 
         ImGui::Text("Options");
 
-        static bool autoRevive = false;
-        ImGui::Checkbox("Revive on death", &autoRevive);
+        ImGui::InputFloat("Automator update delay in seconds", &Settings::automatorUpdateDelayInSeconds);
+        ImGui::Checkbox("Use stats boost", &Settings::useStatsBoost);
 
         ImGui::EndChild();
 
@@ -508,11 +516,23 @@ int main(int, char**)
 
         ImGui::Text("Automate");
 
-        ImGui::Button("Story");
+        if (ImGui::Button("Story"))
+        {
+            automator = new StoryQuest();
+        }
         ImGui::Button("Sub Stories");
         ImGui::Button("Retry");
 
         ImGui::EndChild();
+
+        if (automator != nullptr)
+        {
+            if (ImGui::Button("Stop"))
+            {
+                delete automator;
+                automator = nullptr;
+            }
+        }
 
         ImGui::End();
 
@@ -538,6 +558,12 @@ int main(int, char**)
         // Present Main Platform Window
         if (!main_is_minimized)
             FramePresent(wd);
+
+        if (automator != nullptr)
+        {
+            if (!automator->HasStarted()) automator->Start();
+            if (automator->CanUpdate()) automator->Update();
+        }
     }
 
     // Cleanup

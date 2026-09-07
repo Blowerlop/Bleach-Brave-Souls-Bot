@@ -7,5 +7,5 @@ class StoryQuest final : public Automator
     public:
         StoryQuest();
 
-        void Start() override;
+        void Update() override;
 };

@@ -1,26 +1,51 @@
 ﻿#include "StoryQuest.h++"
 
-#include <thread>
-
-
-StoryQuest::StoryQuest(): Automator()
+StoryQuest::StoryQuest() : Automator()
 {
 }
 
-void StoryQuest::Start()
+void StoryQuest::Update()
 {
-    Automator::Start();
+    Automator::Update();
 
-    while (true)
+    cv::Point coordinate;
+
+    if (DoesScreenshotMatchTemplate("assets/PrepareForQuest.jpg", coordinate))
     {
-        TakeScreenshotAndMatchTemplate("assets/PrepareForQuest.jpg");
-        TakeScreenshotAndMatchTemplate("assets/StartQuest.jpg");
-        TakeScreenshotAndMatchTemplate("assets/Skip.jpg");
-        TakeScreenshotAndMatchTemplate("assets/TapScreen.jpg");
-        TakeScreenshotAndMatchTemplate("assets/NextQuest.jpg");
-        TakeScreenshotAndMatchTemplate("assets/QuestClear.jpg");
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        PointAndClick(coordinate);
+        return;
     }
 
+    // Immediate action. Don't need to wait for a loading before doing anything so don't return.
+    if (DoesScreenshotMatchTemplate("assets/use_stats_boost.jpg", coordinate)) PointAndClick(coordinate);
+
+    if (DoesScreenshotMatchTemplate("assets/StartQuest.jpg", coordinate))
+    {
+        PointAndClick(coordinate);
+        return;
+    }
+
+    if (DoesScreenshotMatchTemplate("assets/Skip.jpg", coordinate))
+    {
+        PointAndClick(coordinate);
+        return;
+    }
+
+    if (DoesScreenshotMatchTemplate("assets/TapScreen.jpg", coordinate))
+    {
+        PointAndClick(coordinate);
+        return;
+    }
+
+    if (DoesScreenshotMatchTemplate("assets/NextQuest.jpg", coordinate))
+    {
+        PointAndClick(coordinate);
+        return;
+    }
+
+    if (DoesScreenshotMatchTemplate("assets/QuestClear.jpg", coordinate))
+    {
+        PointAndClick(coordinate);
+        return;
+    }
 }

@@ -1,5 +1,6 @@
 ﻿#include "Automator.h++"
 
+#include <imgui.h>
 #include <iostream>
 
 #include "opencv2/core.hpp"
@@ -7,16 +8,44 @@
 #include "AutoClicker.h++"
 #include "Process.h++"
 #include "Screenshot.h++"
+#include "Settings.h++"
 #include "TemplateMatching.h++"
 
 
 void Automator::Start()
 {
+    hasStarted = true;
+
     const auto pid = GetProcessId();
     windowHandle = GetWindowHandle(pid);
 }
 
-void Automator::OnScreenshotMatchTemplate(const cv::Point coordinate)
+bool Automator::CanUpdate()
+{
+    currentUpdateDelay -= ImGui::GetIO().DeltaTime;
+
+    if (currentUpdateDelay <= 0)
+    {
+        currentUpdateDelay = Settings::automatorUpdateDelayInSeconds;
+        return true;
+    }
+
+    return false;
+}
+
+void Automator::Update()
+{
+    const auto hbitmap = Screenshot::Window(windowHandle);
+    currentScreenshotMat = BitmapConverter::ToMat(hbitmap);
+    DeleteObject(hbitmap);
+}
+
+bool Automator::HasStarted() const
+{
+    return hasStarted;
+}
+
+void Automator::PointAndClick(cv::Point coordinate) const
 {
     ShowWindow(windowHandle, SW_RESTORE);
     SetForegroundWindow(windowHandle);
@@ -50,14 +79,8 @@ HWND Automator::GetWindowHandle(const DWORD pid)
     return windowHandle;
 }
 
-void Automator::TakeScreenshotAndMatchTemplate(const cv::String& file)
+bool Automator::DoesScreenshotMatchTemplate(const cv::String& file, cv::Point& coordinate) const
 {
-    const HBITMAP hbitmap = Screenshot::Window(windowHandle);
-    const cv::Mat gameScreenshotMat = BitmapConverter::ToMat(hbitmap);
-    DeleteObject(hbitmap);
-
-    if (cv::Point coordinate{}; TemplateMatching::match(gameScreenshotMat, AssetsManager::Load(file), coordinate, false))
-    {
-        OnScreenshotMatchTemplate(coordinate);
-    }
+    return TemplateMatching::match(currentScreenshotMat, AssetsManager::Load(file), coordinate, false);
 }
+
