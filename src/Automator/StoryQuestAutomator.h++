@@ -7,5 +7,6 @@ class StoryQuestAutomator final : public Automator
     public:
         StoryQuestAutomator();
 
+    protected:
         void Update() override;
 };

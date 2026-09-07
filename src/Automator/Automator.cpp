@@ -2,6 +2,7 @@
 
 #include <imgui.h>
 #include <iostream>
+#include <thread>
 
 #include "opencv2/core.hpp"
 #include "../AssetsManager.h++"
@@ -14,23 +15,8 @@
 
 void Automator::Start()
 {
-    hasStarted = true;
-
     const auto pid = GetProcessId();
     windowHandle = GetWindowHandle(pid);
-}
-
-bool Automator::CanUpdate()
-{
-    currentUpdateDelay -= ImGui::GetIO().DeltaTime;
-
-    if (currentUpdateDelay <= 0)
-    {
-        currentUpdateDelay = Settings::automatorUpdateDelayInSeconds;
-        return true;
-    }
-
-    return false;
 }
 
 void Automator::Update()
@@ -40,10 +26,19 @@ void Automator::Update()
     DeleteObject(hbitmap);
 }
 
-bool Automator::HasStarted() const
+void Automator::Run()
 {
-    return hasStarted;
+    Start();
+
+    while (true)
+    {
+        Update();
+
+        std::chrono::duration<float> duration{Settings::automatorUpdateDelayInSeconds};
+        std::this_thread::sleep_for(duration);
+    }
 }
+
 
 void Automator::PointAndClick(cv::Point coordinate) const
 {

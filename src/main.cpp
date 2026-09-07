@@ -24,6 +24,7 @@
 
 #include "Automator/Automator.h++"
 #include "Settings.h++"
+#include "Automator/AutomatorController.h++"
 #include "Automator/StoryQuestAutomator.h++"
 
 // Volk headers
@@ -353,7 +354,7 @@ static void FramePresent(ImGui_ImplVulkanH_Window* wd)
     wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->SemaphoreCount; // Now we can use the next set of semaphores
 }
 
-static Automator* automator;
+static AutomatorController automatorController;
 
 
 // Main code
@@ -518,21 +519,21 @@ int main(int, char**)
 
         if (ImGui::Button("Story"))
         {
-            automator = new StoryQuestAutomator();
+            automatorController.SetNewAutomator(std::make_unique<StoryQuestAutomator>());
+            automatorController.StartAutomator();
         }
         ImGui::Button("Sub Stories");
         ImGui::Button("Retry");
 
         ImGui::EndChild();
 
-        if (automator != nullptr)
+        if (automatorController.HasAnAutomator())
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
 
             if (ImGui::Button("Stop automate"))
             {
-                delete automator;
-                automator = nullptr;
+                automatorController.StopAutomator();
             }
 
             ImGui::PopStyleColor();
@@ -562,12 +563,6 @@ int main(int, char**)
         // Present Main Platform Window
         if (!main_is_minimized)
             FramePresent(wd);
-
-        if (automator != nullptr)
-        {
-            if (!automator->HasStarted()) automator->Start();
-            if (automator->CanUpdate()) automator->Update();
-        }
     }
 
     // Cleanup
