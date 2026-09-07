@@ -21,7 +21,7 @@ void StoryQuestAutomator::Update()
     }
 
     // Immediate action. Don't need to wait for a loading before doing anything so don't return.
-    if (Settings::useStatsBoost.load() && DoesScreenshotMatchTemplate("assets/use_stats_boost.jpg", coordinate))
+    if (Settings::useStatsBoost.load() && DoesScreenshotMatchTemplate("assets/UseStatsBoost.jpg", coordinate))
     {
         PointAndClick(coordinate);
     }
