@@ -2,6 +2,13 @@
 
 #include <thread>
 
+#include "SellCharactersAutomator.h++"
+
+AutomatorController::~AutomatorController()
+{
+    StopAutomator();
+}
+
 void AutomatorController::SetNewAutomator(std::unique_ptr<Automator> automator_)
 {
     StopAutomator();
@@ -25,4 +32,9 @@ void AutomatorController::StopAutomator()
 bool AutomatorController::HasAnAutomator() const
 {
     return automator != nullptr;
+}
+
+Automator* AutomatorController::GetAutomator() const
+{
+    return automator.get();
 }

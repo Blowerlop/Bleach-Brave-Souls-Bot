@@ -1,18 +1,32 @@
 ﻿#include "StoryQuestAutomator.h++"
 
 #include <atomic>
+#include <future>
 
+#include "AutomatorController.h++"
+#include "SellCharactersAutomator.h++"
 #include "../Settings.h++"
 
-StoryQuestAutomator::StoryQuestAutomator() : Automator()
+void StoryQuestAutomator::Update(const std::stop_token& stopStoken)
 {
-}
-
-void StoryQuestAutomator::Update()
-{
-    Automator::Update();
+    Automator::Update(stopStoken);
 
     cv::Point coordinate;
+
+    if (DoesScreenshotMatchTemplate("assets/CharacterList.jpg", coordinate))
+    {
+        AutomatorController automatorController;
+        automatorController.SetNewAutomator(std::make_unique<SellCharactersAutomator>());
+        automatorController.StartAutomator();
+
+        auto* automator = dynamic_cast<SellCharactersAutomator*>(automatorController.GetAutomator());
+        while (!stopStoken.stop_requested() && !automator->HasSell())
+        {
+            // noop
+        }
+
+        automatorController.StopAutomator();
+    }
 
     if (DoesScreenshotMatchTemplate("assets/PrepareForQuest.jpg", coordinate))
     {

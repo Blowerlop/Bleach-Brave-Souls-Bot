@@ -4,9 +4,6 @@
 
 class StoryQuestAutomator final : public Automator
 {
-    public:
-        StoryQuestAutomator();
-
     protected:
-        void Update() override;
+        void Update(const std::stop_token& stopStoken) override;
 };

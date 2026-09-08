@@ -19,7 +19,7 @@ void Automator::Start()
     windowHandle = GetWindowHandle(pid);
 }
 
-void Automator::Update()
+void Automator::Update(const std::stop_token& stopStoken)
 {
     const auto hbitmap = Screenshot::Window(windowHandle);
     currentScreenshotMat = BitmapConverter::ToMat(hbitmap);
@@ -36,7 +36,7 @@ void Automator::Run(const std::stop_token& stopToken)
 
     while (!stopToken.stop_requested())
     {
-        Update();
+        Update(stopToken);
 
         conditionVariable.wait_for(
             lock,

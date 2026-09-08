@@ -7,54 +7,69 @@ cmake_minimum_required(VERSION 3.15.0)
 cmake_policy(SET CMP0091 NEW)
 project(Bleach-Brave-Souls-Bot LANGUAGES CXX)
 set(CURRENT_COMPILER_ID ${CMAKE_CXX_COMPILER_ID})
+set(CURRENT_COMPILER_FRONTEND_VARIANT ${CMAKE_CXX_COMPILER_FRONTEND_VARIANT})
+if(NOT CURRENT_COMPILER_FRONTEND_VARIANT)
+    if(MSVC)
+        set(CURRENT_COMPILER_FRONTEND_VARIANT "MSVC")
+    else()
+        set(CURRENT_COMPILER_FRONTEND_VARIANT "GNU")
+    endif()
+endif()
+if(DEFINED CMAKE_CXX_COMPILER_LINKER_FRONTEND_VARIANT)
+    set(CURRENT_LINKER_FRONTEND_VARIANT ${CMAKE_CXX_COMPILER_LINKER_FRONTEND_VARIANT})
+endif()
+if(NOT CURRENT_LINKER_FRONTEND_VARIANT)
+    set(CURRENT_LINKER_FRONTEND_VARIANT ${CURRENT_COMPILER_FRONTEND_VARIANT})
+endif()
 
 # target
 add_executable(Bleach-Brave-Souls-Bot "")
 set_target_properties(Bleach-Brave-Souls-Bot PROPERTIES OUTPUT_NAME "Bleach-Brave-Souls-Bot")
-set_target_properties(Bleach-Brave-Souls-Bot PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/windows/x64/release")
+set_target_properties(Bleach-Brave-Souls-Bot PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/build/windows/x64/debug")
 target_include_directories(Bleach-Brave-Souls-Bot SYSTEM PRIVATE
-    C:/Users/chris/AppData/Local/.xmake/packages/o/opencv/4.14.0/1b1344194f324a23a4d25c97a6651fb3/include
-    C:/Users/chris/AppData/Local/.xmake/packages/f/ffmpeg/7.1/321bff2a86b249779be8ee863d662c50/include
-    C:/Users/chris/AppData/Local/.xmake/packages/e/eigen/5.0.1/60cb40bd086c4c96b9551ce6ccff0e36/include
-    C:/Users/chris/AppData/Local/.xmake/packages/e/eigen/5.0.1/60cb40bd086c4c96b9551ce6ccff0e36/include/eigen3
-    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/263a39cd1a204a72b22c4efe942b5e31/include
-    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/263a39cd1a204a72b22c4efe942b5e31/include/imgui
-    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/263a39cd1a204a72b22c4efe942b5e31/include/backends
-    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/263a39cd1a204a72b22c4efe942b5e31/include/misc/cpp
-    C:/Users/chris/AppData/Local/.xmake/packages/g/glfw/3.4/d59f6dd71e7647cc95d2c1d35e51a39a/include
+    C:/Users/chris/AppData/Local/.xmake/packages/o/opencv/4.14.0/963f4f1d1786474f82e508e773b90f6f/include
+    C:/Users/chris/AppData/Local/.xmake/packages/f/ffmpeg/7.1/aa3a52fffba8430aa458796fe166cdfc/include
+    C:/Users/chris/AppData/Local/.xmake/packages/e/eigen/5.0.1/5ef3384e4e2b4321944c0e48bda8cbe7/include
+    C:/Users/chris/AppData/Local/.xmake/packages/e/eigen/5.0.1/5ef3384e4e2b4321944c0e48bda8cbe7/include/eigen3
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/6f34b5babb994945acbc53c6dbdd5e09/include
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/6f34b5babb994945acbc53c6dbdd5e09/include/imgui
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/6f34b5babb994945acbc53c6dbdd5e09/include/backends
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/6f34b5babb994945acbc53c6dbdd5e09/include/misc/cpp
+    C:/Users/chris/AppData/Local/.xmake/packages/g/glfw/3.4/249310043d2640f09e5454357e7de716/include
     C:/Users/chris/AppData/Local/.xmake/packages/v/vulkan-headers/1.4.335+0/9a6e360bbd30447880dba7b3b100d7dc/include
+    C:/Users/chris/AppData/Local/.xmake/packages/b/boost/1.90.0/7cab7160a0d4473a8bd7d4ffee4f2474/include
 )
 target_compile_definitions(Bleach-Brave-Souls-Bot PRIVATE
     NOMINMAX
     GLFW_INCLUDE_NONE
+    BOOST_ALL_NO_LIB
 )
 target_compile_options(Bleach-Brave-Souls-Bot PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CXX>:-DNDEBUG>
-    $<$<COMPILE_LANGUAGE:CUDA>:-DNDEBUG>
+    $<$<COMPILE_LANGUAGE:CUDA>:-G>
 )
-if(CURRENT_COMPILER_ID STREQUAL "MSVC")
+if(CURRENT_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
     target_compile_options(Bleach-Brave-Souls-Bot PRIVATE /EHsc)
-elseif(CURRENT_COMPILER_ID STREQUAL "Clang")
+elseif(CURRENT_COMPILER_FRONTEND_VARIANT STREQUAL "GNU" AND CURRENT_COMPILER_ID MATCHES "Clang$|^IntelLLVM$")
     target_compile_options(Bleach-Brave-Souls-Bot PRIVATE -fexceptions)
     target_compile_options(Bleach-Brave-Souls-Bot PRIVATE -fcxx-exceptions)
-elseif(CURRENT_COMPILER_ID STREQUAL "GNU")
+elseif(CURRENT_COMPILER_FRONTEND_VARIANT STREQUAL "GNU" AND CURRENT_COMPILER_ID STREQUAL "GNU")
     target_compile_options(Bleach-Brave-Souls-Bot PRIVATE -fexceptions)
 endif()
 set_target_properties(Bleach-Brave-Souls-Bot PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_features(Bleach-Brave-Souls-Bot PRIVATE cxx_std_23)
-if(CURRENT_COMPILER_ID STREQUAL "MSVC")
-    target_compile_options(Bleach-Brave-Souls-Bot PRIVATE $<$<CONFIG:Release>:-O2>)
+if(CURRENT_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+    target_compile_options(Bleach-Brave-Souls-Bot PRIVATE $<$<CONFIG:Debug>:-Od>)
 else()
-    target_compile_options(Bleach-Brave-Souls-Bot PRIVATE -O3)
+    target_compile_options(Bleach-Brave-Souls-Bot PRIVATE -O0)
 endif()
-if(CURRENT_COMPILER_ID STREQUAL "MSVC")
+if(CURRENT_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+    target_compile_options(Bleach-Brave-Souls-Bot PRIVATE -Zi)
 else()
-    target_compile_options(Bleach-Brave-Souls-Bot PRIVATE -fvisibility=hidden)
+    target_compile_options(Bleach-Brave-Souls-Bot PRIVATE -g)
 endif()
-if(CURRENT_COMPILER_ID STREQUAL "MSVC")
+if(CURRENT_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
     set_property(TARGET Bleach-Brave-Souls-Bot PROPERTY
-        MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+        MSVC_RUNTIME_LIBRARY "MultiThreadedDebugDLL")
 endif()
 target_link_libraries(Bleach-Brave-Souls-Bot PRIVATE
     opencv_phase_unwrapping4140
@@ -128,6 +143,10 @@ target_link_libraries(Bleach-Brave-Souls-Bot PRIVATE
     glfw3
     opengl32
     vulkan-1
+    libboost_filesystem
+    libboost_coroutine
+    libboost_context
+    libboost_atomic
     user32
     gdi32
     glu32
@@ -145,13 +164,15 @@ target_link_libraries(Bleach-Brave-Souls-Bot PRIVATE
     User32
     imm32
     shell32
+    ntdll
 )
 target_link_directories(Bleach-Brave-Souls-Bot PRIVATE
-    C:/Users/chris/AppData/Local/.xmake/packages/o/opencv/4.14.0/1b1344194f324a23a4d25c97a6651fb3/x64/vc17/staticlib
-    C:/Users/chris/AppData/Local/.xmake/packages/f/ffmpeg/7.1/321bff2a86b249779be8ee863d662c50/lib
-    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/263a39cd1a204a72b22c4efe942b5e31/lib
-    C:/Users/chris/AppData/Local/.xmake/packages/g/glfw/3.4/d59f6dd71e7647cc95d2c1d35e51a39a/lib
-    C:/Users/chris/AppData/Local/.xmake/packages/v/vulkan-loader/1.4.335+0/faac6c747f5f4c18b32d2c968be37765/lib
+    C:/Users/chris/AppData/Local/.xmake/packages/o/opencv/4.14.0/963f4f1d1786474f82e508e773b90f6f/x64/vc17/staticlib
+    C:/Users/chris/AppData/Local/.xmake/packages/f/ffmpeg/7.1/aa3a52fffba8430aa458796fe166cdfc/lib
+    C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/6f34b5babb994945acbc53c6dbdd5e09/lib
+    C:/Users/chris/AppData/Local/.xmake/packages/g/glfw/3.4/249310043d2640f09e5454357e7de716/lib
+    C:/Users/chris/AppData/Local/.xmake/packages/v/vulkan-loader/1.4.335+0/4f849bd82eed4d10a3ff9abea5f7e2b8/lib
+    C:/Users/chris/AppData/Local/.xmake/packages/b/boost/1.90.0/7cab7160a0d4473a8bd7d4ffee4f2474/lib
 )
 # private sourcefiles from sourcebatch c++.build for target Bleach-Brave-Souls-Bot
 target_sources(Bleach-Brave-Souls-Bot PRIVATE 
@@ -159,6 +180,7 @@ target_sources(Bleach-Brave-Souls-Bot PRIVATE
     src/AutoClicker.cpp
     src/Automator/Automator.cpp
     src/Automator/AutomatorController.cpp
+    src/Automator/SellCharactersAutomator.cpp
     src/Automator/StoryQuestAutomator.cpp
     src/BitmapConverter.cpp
     src/main.cpp
