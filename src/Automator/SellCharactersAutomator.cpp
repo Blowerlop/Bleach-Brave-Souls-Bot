@@ -1,5 +1,7 @@
 ﻿#include "SellCharactersAutomator.h++"
 
+#include "../Settings.h++"
+
 bool SellCharactersAutomator::HasSell() const
 {
     return hasSell;
@@ -23,11 +25,55 @@ void SellCharactersAutomator::RunSequence(boost::coroutines2::coroutine<void>::p
     PointAndClick(coordinate);
     yield();
 
-    if (DoesScreenshotMatchTemplate(assetsPath + "RarityThreeStarsOrLower.jpg", coordinate)) PointAndClick(coordinate);
-    if (DoesScreenshotMatchTemplate(assetsPath + "LevelAll.jpg", coordinate)) PointAndClick(coordinate);
-    if (DoesScreenshotMatchTemplate(assetsPath + "BadgeOnly.jpg", coordinate)) PointAndClick(coordinate);
+    switch (Settings::sellRarity.load())
+    {
+        case Settings::SellRarity::ONE_STARS_ONLY:
+            DoesScreenshotMatchTemplate(assetsPath + "RarityOneStarsOnly.jpg", coordinate);
+            break;
+        case Settings::SellRarity::TWO_STARS_OR_LOWER:
+            DoesScreenshotMatchTemplate(assetsPath + "RarityTwoStarsOrLower.jpg", coordinate);
+            break;
+        case Settings::SellRarity::THREE_STARS_OR_LOWER:
+            DoesScreenshotMatchTemplate(assetsPath + "RarityThreeStarsOrLower.jpg", coordinate);
+            break;
+        case Settings::SellRarity::FOUR_STARS_OR_LOWER:
+            DoesScreenshotMatchTemplate(assetsPath + "RarityFourStarsOrLower.jpg", coordinate);
+            break;
+        case Settings::SellRarity::FIVE_STARS_OR_LOWER:
+            DoesScreenshotMatchTemplate(assetsPath + "RarityFiveStarsOrLower.jpg", coordinate);
+            break;
 
-    if (DoesScreenshotMatchTemplate(assetsPath + "Select.jpg", coordinate)) PointAndClick(coordinate);
+        default:
+            break;
+    }
+    PointAndClick(coordinate);
+
+    switch (Settings::sellLevel.load())
+    {
+        case Settings::SellLevel::ONE_ONLY:
+            DoesScreenshotMatchTemplate(assetsPath + "LevelOneOnly.jpg", coordinate);
+            break;
+
+        case Settings::SellLevel::ALL:
+            DoesScreenshotMatchTemplate(assetsPath + "LevelAll.jpg", coordinate);
+            break;
+    }
+    PointAndClick(coordinate);
+
+    switch (Settings::sellBadge.load())
+    {
+        case Settings::SellBadge::ONLY:
+            DoesScreenshotMatchTemplate(assetsPath + "BadgeOnly.jpg", coordinate);
+            break;
+
+        case Settings::SellBadge::ALL:
+            DoesScreenshotMatchTemplate(assetsPath + "BadgeAll.jpg", coordinate);
+            break;
+    }
+    PointAndClick(coordinate);
+
+    DoesScreenshotMatchTemplate(assetsPath + "Select.jpg", coordinate);
+    PointAndClick(coordinate);
 
     while (!DoesScreenshotMatchTemplate(assetsPath + "Sell2.jpg", coordinate)) yield();
     PointAndClick(coordinate);

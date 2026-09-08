@@ -1,6 +1,6 @@
 set_languages("c++23")
 add_rules("mode.debug", "mode.release")
-add_requires("opencv", "vulkan-loader")
+add_requires("opencv", "vulkan-loader", "magic_enum")
 add_requires("imgui 1.92.9-docking", {configs = {glfw = true, vulkan = true}})
 add_requires("boost", {configs = {coroutine = true}})
 
@@ -8,7 +8,7 @@ target("Bleach-Brave-Souls-Bot")
     set_kind("binary")
     add_files("src/**.cpp")
     add_syslinks("user32")
-    add_packages("opencv", "imgui", "vulkan-loader", "boost")
+    add_packages("opencv", "imgui", "vulkan-loader", "boost", "magic_enum")
     add_defines("NOMINMAX")
 
     after_build(function (target)

@@ -18,8 +18,10 @@
 #include "imgui_impl_vulkan.h"
 #include <stdio.h>          // printf, fprintf
 #include <stdlib.h>         // abort
+#include "magic_enum.hpp"
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
+#include <iostream>
 #include <GLFW/glfw3.h>
 
 #include "Automator/Automator.h++"
@@ -509,10 +511,66 @@ int main(int, char**)
         {
             Settings::automatorUpdateDelayInSeconds.store(temp);
         }
+
         if (bool temp = Settings::useStatsBoost.load(); ImGui::Checkbox("Use stats boost", &temp))
         {
             Settings::useStatsBoost.store(temp);
         }
+
+        if (bool temp = Settings::automaticallySellCharactersIfMaximumCapacityReached.load(); ImGui::Checkbox("Automatically sell characters if maximum capacity is reached", &temp))
+        {
+            Settings::automaticallySellCharactersIfMaximumCapacityReached.store(temp);
+        }
+
+        if (Settings::automaticallySellCharactersIfMaximumCapacityReached.load())
+        {
+            Settings::SellRarity currentElementSellRarity = Settings::sellRarity.load();
+            if (ImGui::BeginCombo("Sell Rarity", std::string(magic_enum::enum_name(currentElementSellRarity)).c_str()))
+            {
+                for (auto name : magic_enum::enum_names<Settings::SellRarity>())
+                {
+                    bool selected = (magic_enum::enum_name(currentElementSellRarity) == name);
+                    if (ImGui::Selectable(std::string(name).c_str(), selected))
+                        currentElementSellRarity = magic_enum::enum_cast<Settings::SellRarity>(name).value();
+                    if (selected)
+                        ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
+            Settings::sellRarity.store(currentElementSellRarity);
+
+            Settings::SellLevel currentElementSellLevel = Settings::sellLevel.load();
+            if (ImGui::BeginCombo("Sell Level", std::string(magic_enum::enum_name(currentElementSellLevel)).c_str()))
+            {
+                for (auto name : magic_enum::enum_names<Settings::SellLevel>())
+                {
+                    bool selected = (magic_enum::enum_name(currentElementSellLevel) == name);
+                    if (ImGui::Selectable(std::string(name).c_str(), selected))
+                        currentElementSellLevel = magic_enum::enum_cast<Settings::SellLevel>(name).value();
+                    if (selected)
+                        ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
+            Settings::sellLevel.store(currentElementSellLevel);
+
+            Settings::SellBadge currentElementSellBadge = Settings::sellBadge.load();
+            if (ImGui::BeginCombo("Sell Badge", std::string(magic_enum::enum_name(currentElementSellBadge)).c_str()))
+            {
+                for (auto name : magic_enum::enum_names<Settings::SellBadge>())
+                {
+                    bool selected = (magic_enum::enum_name(currentElementSellBadge) == name);
+                    if (ImGui::Selectable(std::string(name).c_str(), selected))
+                        currentElementSellBadge = magic_enum::enum_cast<Settings::SellBadge>(name).value();
+                    if (selected)
+                        ImGui::SetItemDefaultFocus();
+                }
+                ImGui::EndCombo();
+            }
+            Settings::sellBadge.store(currentElementSellBadge);
+        }
+
+
 
         ImGui::EndChild();
 
