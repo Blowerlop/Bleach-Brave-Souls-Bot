@@ -81,7 +81,10 @@ void SellCharactersAutomator::RunSequence(boost::coroutines2::coroutine<void>::p
     while (!DoesScreenshotMatchTemplate(assetsPath + "Ok.jpg", coordinate)) yield();
     PointAndClick(coordinate);
 
-    while (!DoesScreenshotMatchTemplate(assetsPath + "Select.jpg", coordinate)) yield();
+    while (!DoesScreenshotMatchTemplate(assetsPath + "Close.jpg", coordinate)) yield();
+    PointAndClick(coordinate);
+
+    while (!DoesScreenshotMatchTemplate("assets/Back.jpg", coordinate)) yield();
     PointAndClick(coordinate);
     yield();
 
