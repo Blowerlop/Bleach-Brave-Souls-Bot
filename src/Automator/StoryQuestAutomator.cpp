@@ -23,9 +23,9 @@ void StoryQuestAutomator::Update(boost::coroutines2::coroutine<void>::push_type&
             yield();
 
         }
-        while (TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo.jpg", coordinate) && !TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/Story.jpg", _));
+        while (TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo.jpg", coordinate) && !TemplateMatching::Match(gameScreenshot, "assets/Story.jpg", _));
 
-        while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/Story.jpg", coordinate)) yield();
+        while (!TemplateMatching::Match(gameScreenshot, "assets/Story.jpg", coordinate)) yield();
         applicationManager.PointAndClick(coordinate);
 
         while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/Story/CurrentQuestSlot.jpg", coordinate)) yield();
@@ -36,46 +36,46 @@ void StoryQuestAutomator::Update(boost::coroutines2::coroutine<void>::push_type&
             applicationManager.PointAndClick(coordinate);
             yield();
         }
-        while (!TemplateMatching::Match(gameScreenshot, "assets/PrepareForQuest.jpg", _));
+        while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/PrepareForQuest.jpg", _));
     }
 
-    if (TemplateMatching::Match(gameScreenshot, "assets/PrepareForQuest.jpg", coordinate))
+    if (TemplateMatching::Match(gameScreenshot, "assets/Quests/PrepareForQuest.jpg", coordinate))
     {
         applicationManager.PointAndClick(coordinate);
         return;
     }
 
     // Immediate action. Don't need to wait for a loading before doing anything so don't return.
-    if (Settings::useStatsBoost.load() && TemplateMatching::Match(gameScreenshot, "assets/UseStatsBoost.jpg", coordinate))
+    if (Settings::useStatsBoost.load() && TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/UseStatsBoost.jpg", coordinate))
     {
         applicationManager.PointAndClick(coordinate);
     }
 
-    if (TemplateMatching::Match(gameScreenshot, "assets/StartQuest.jpg", coordinate))
-    {
-        applicationManager.PointAndClick(coordinate);
-        return;
-    }
-
-    if (TemplateMatching::Match(gameScreenshot, "assets/Skip.jpg", coordinate))
+    if (TemplateMatching::Match(gameScreenshot, "assets/Quests/StartQuest.jpg", coordinate))
     {
         applicationManager.PointAndClick(coordinate);
         return;
     }
 
-    if (TemplateMatching::Match(gameScreenshot, "assets/TapScreen.jpg", coordinate))
+    if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/Skip.jpg", coordinate))
     {
         applicationManager.PointAndClick(coordinate);
         return;
     }
 
-    if (TemplateMatching::Match(gameScreenshot, "assets/NextQuest.jpg", coordinate))
+    if (TemplateMatching::Match(gameScreenshot, "assets/Quests/TapScreen.jpg", coordinate))
     {
         applicationManager.PointAndClick(coordinate);
         return;
     }
 
-    if (TemplateMatching::Match(gameScreenshot, "assets/QuestClear.jpg", coordinate))
+    if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/Story/NextQuest.jpg", coordinate))
+    {
+        applicationManager.PointAndClick(coordinate);
+        return;
+    }
+
+    if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/Story/QuestClear.jpg", coordinate))
     {
         applicationManager.PointAndClick(coordinate);
     }
