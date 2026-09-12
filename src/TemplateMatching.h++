@@ -10,11 +10,10 @@ class TemplateMatching
 
         ~TemplateMatching() = delete;
 
-        static bool match(const cv::Mat& image, const cv::Mat& template_, cv::Point& centerPoint, bool debug);
+        static bool Match(const cv::Mat& image, const cv::Mat& template_, cv::Point& centerPoint);
+        static bool Match(const cv::Mat& image, const cv::String& fileTemplate, cv::Point& centerPoint);
 
     private:
         static constexpr float THRESHOLD = 0.8f;
         static constexpr int METHOD = cv::TM_CCOEFF_NORMED;
-
-        static void drawMatch(const cv::Mat& image, const cv::Mat& template_, const cv::Point& matchPoint, const cv::Point& centerPoint, const double confidence);
 };

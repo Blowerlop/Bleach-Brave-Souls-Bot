@@ -31,10 +31,10 @@ void StoryQuestAutomator::RunSequence(const std::stop_token& stopToken,
     if (DoesScreenshotMatchTemplate("assets/Inventory/Characters/Sell/CharacterList.jpg", coordinate))
     {
         AutomatorController automatorController;
-        automatorController.SetNewAutomator(std::make_unique<SellCharactersAutomator>());
+        automatorController.StackAutomator(std::make_unique<SellCharactersAutomator>());
         automatorController.StartAutomator();
 
-        auto* automator = dynamic_cast<SellCharactersAutomator*>(automatorController.GetAutomator());
+        auto* automator = dynamic_cast<SellCharactersAutomator*>(automatorController.GetCurrentAutomator());
         while (!stopToken.stop_requested() && !automator->HasSell())
         {
             // noop

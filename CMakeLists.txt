@@ -190,6 +190,10 @@ target_sources(Bleach-Brave-Souls-Bot PRIVATE
     src/Process.cpp
     src/Screenshot.cpp
     src/TemplateMatching.cpp
+    src/Watcher/FullChararactersCapacityWatcher.cpp
+    src/Watcher/Watcher.cpp
+    src/Watcher/WatcherController.cpp
+    src/Watcher/WatcherManager.cpp
     src/Window.cpp
 )
 

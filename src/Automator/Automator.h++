@@ -22,5 +22,6 @@ class Automator
         HWND windowHandle = nullptr;
         static DWORD GetProcessId();
         static HWND GetWindowHandle(DWORD pid);
+        
         cv::Mat currentScreenshotMat;
 };

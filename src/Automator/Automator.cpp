@@ -86,5 +86,5 @@ HWND Automator::GetWindowHandle(const DWORD pid)
 
 bool Automator::DoesScreenshotMatchTemplate(const cv::String& file, cv::Point& coordinate) const
 {
-    return TemplateMatching::match(currentScreenshotMat, AssetsManager::Load(file), coordinate, false);
+    return TemplateMatching::Match(currentScreenshotMat, file, coordinate);
 }

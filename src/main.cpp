@@ -28,6 +28,9 @@
 #include "Settings.h++"
 #include "Automator/AutomatorController.h++"
 #include "Automator/StoryQuestAutomator.h++"
+#include "Watcher/FullChararactersCapacityWatcher.h++"
+#include "Watcher/WatcherController.h++"
+#include "Watcher/WatcherManager.h++"
 
 // Volk headers
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
@@ -356,8 +359,8 @@ static void FramePresent(ImGui_ImplVulkanH_Window* wd)
     wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->SemaphoreCount; // Now we can use the next set of semaphores
 }
 
-static AutomatorController automatorController;
-
+static AutomatorController mainAutomatorController;
+static std::vector<AutomatorController> backgroundAutomatorControllers;
 
 // Main code
 int main(int, char**)
@@ -462,6 +465,19 @@ int main(int, char**)
     //IM_ASSERT(font != nullptr);
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+    std::unique_ptr<Watcher> watcher = std::make_unique<FullChararactersCapacityWatcher>();
+    watcher->onWatchProblem.connect([]
+        {
+            std::cout << "No more space in character inventory!" << std::endl;
+        });
+
+
+    WatcherManager watcherManager;
+    watcherManager.AddController(WatcherController(std::move(watcher)));
+    watcherManager.StartRunControllersThread();
+
+
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -583,21 +599,22 @@ int main(int, char**)
 
         if (ImGui::Button("Story"))
         {
-            automatorController.SetNewAutomator(std::make_unique<StoryQuestAutomator>());
-            automatorController.StartAutomator();
+            mainAutomatorController.StackAutomator(std::make_unique<StoryQuestAutomator>());
+            mainAutomatorController.StartAutomator();
         }
         ImGui::Button("Sub Stories");
         ImGui::Button("Retry");
 
         ImGui::EndChild();
 
-        if (automatorController.HasAnAutomator())
+        if (mainAutomatorController.HasAnAutomator())
         {
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
 
             if (ImGui::Button("Stop automate"))
             {
-                automatorController.StopAutomator();
+                mainAutomatorController.StopAutomator();
+                mainAutomatorController.PopStackAutomator();
             }
 
             ImGui::PopStyleColor();
