@@ -1,10 +1,10 @@
-﻿#include "StoryQuestAutomator.h++"
+﻿#include "StoryAutomator.h++"
 
 #include "../ApplicationManager.h++"
 #include "../Settings.h++"
 #include "../TemplateMatching.h++"
 
-void StoryQuestAutomator::Update(boost::coroutines2::coroutine<void>::push_type& yield,
+void StoryAutomator::Update(boost::coroutines2::coroutine<void>::push_type& yield,
     const cv::Mat& gameScreenshot)
 {
     Automator::Update(yield, gameScreenshot);
@@ -81,7 +81,7 @@ void StoryQuestAutomator::Update(boost::coroutines2::coroutine<void>::push_type&
     }
 }
 
-std::string StoryQuestAutomator::ToString() const
+std::string StoryAutomator::ToString() const
 {
-    return "Quest";
+    return "Story";
 }

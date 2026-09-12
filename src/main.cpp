@@ -27,7 +27,7 @@
 #include "ApplicationManager.h++"
 #include "Settings.h++"
 #include "Automator/AutomatorController.h++"
-#include "Automator/StoryQuestAutomator.h++"
+#include "Automator/StoryAutomator.h++"
 #include "Watcher/FullCharactersCapacityWatcher.h++"
 #include "Watcher/WatcherManager.h++"
 #include "Automator/AutomatorManager.h++"
@@ -599,7 +599,7 @@ int main(int, char**)
         {
             if (ImGui::Button("Story"))
             {
-                ApplicationManager::Instance().GetAutomatorManager().StackAutomator(AutomatorController(std::make_unique<StoryQuestAutomator>()));
+                ApplicationManager::Instance().GetAutomatorManager().StackAutomator(AutomatorController(std::make_unique<StoryAutomator>()));
             }
             ImGui::Button("Sub Stories");
             ImGui::Button("Retry");
