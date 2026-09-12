@@ -185,8 +185,9 @@ target_sources(Bleach-Brave-Souls-Bot PRIVATE
     src/Automator/Automator.cpp
     src/Automator/AutomatorController.cpp
     src/Automator/AutomatorManager.cpp
+    src/Automator/RetryAutomator.cpp
     src/Automator/SellCharactersAutomator.cpp
-    src/Automator/StoryQuestAutomator.cpp
+    src/Automator/StoryAutomator.cpp
     src/BitmapConverter.cpp
     src/main.cpp
     src/Process.cpp

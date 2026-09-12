@@ -31,6 +31,7 @@
 #include "Watcher/FullCharactersCapacityWatcher.h++"
 #include "Watcher/WatcherManager.h++"
 #include "Automator/AutomatorManager.h++"
+#include "Automator/SoloRetryAutomator.h++"
 
 // Volk headers
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
@@ -601,8 +602,16 @@ int main(int, char**)
             {
                 ApplicationManager::Instance().GetAutomatorManager().StackAutomator(AutomatorController(std::make_unique<StoryAutomator>()));
             }
-            ImGui::Button("Sub Stories");
-            ImGui::Button("Retry");
+
+            if (ImGui::Button("Sub Stories"))
+            {
+                // noop
+            }
+
+            if (ImGui::Button("Solo Retry"))
+            {
+                ApplicationManager::Instance().GetAutomatorManager().StackAutomator(AutomatorController(std::make_unique<SoloRetryAutomator>()));
+            }
         }
 
         ImGui::EndChild();
