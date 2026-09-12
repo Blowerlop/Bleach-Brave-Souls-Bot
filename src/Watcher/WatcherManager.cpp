@@ -4,6 +4,7 @@
 #include <iostream>
 #include <ostream>
 
+#include "../ApplicationManager.h++"
 #include "../BitmapConverter.h++"
 #include "../Process.h++"
 #include "../Screenshot.h++"
@@ -37,7 +38,7 @@ void WatcherManager::StartRunControllersThread()
 
         while (!stopToken.stop_requested())
         {
-            const auto screenshot = TakeGameScreenshot();
+            const auto screenshot = ApplicationManager::Instance().TakeGameScreenshot();
 
             for (auto& controller : controllers)
             {
@@ -54,16 +55,4 @@ void WatcherManager::StartRunControllersThread()
         );
         }
     });
-}
-
-cv::Mat WatcherManager::TakeGameScreenshot() const
-{
-    const auto processId = Process::FindProcessId("BleachBraveSouls.exe");
-    const auto windowHandle = Window::GetWindowHandleByProcessId(processId);
-
-    const auto hbitmap = Screenshot::Window(windowHandle);
-    auto screenshot = BitmapConverter::ToMat(hbitmap);
-    DeleteObject(hbitmap);
-
-    return screenshot;
 }

@@ -24,13 +24,13 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 
-#include "Automator/Automator.h++"
+#include "ApplicationManager.h++"
 #include "Settings.h++"
 #include "Automator/AutomatorController.h++"
 #include "Automator/StoryQuestAutomator.h++"
-#include "Watcher/FullChararactersCapacityWatcher.h++"
-#include "Watcher/WatcherController.h++"
+#include "Watcher/FullCharactersCapacityWatcher.h++"
 #include "Watcher/WatcherManager.h++"
+#include "Automator/AutomatorManager.h++"
 
 // Volk headers
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
@@ -359,9 +359,6 @@ static void FramePresent(ImGui_ImplVulkanH_Window* wd)
     wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->SemaphoreCount; // Now we can use the next set of semaphores
 }
 
-static AutomatorController mainAutomatorController;
-static std::vector<AutomatorController> backgroundAutomatorControllers;
-
 // Main code
 int main(int, char**)
 {
@@ -466,18 +463,7 @@ int main(int, char**)
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    std::unique_ptr<Watcher> watcher = std::make_unique<FullChararactersCapacityWatcher>();
-    watcher->onWatchProblem.connect([]
-        {
-            std::cout << "No more space in character inventory!" << std::endl;
-        });
-
-
-    WatcherManager watcherManager;
-    watcherManager.AddController(WatcherController(std::move(watcher)));
-    watcherManager.StartRunControllersThread();
-
-
+    ApplicationManager::Instance();
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -597,28 +583,29 @@ int main(int, char**)
 
         ImGui::Text("Automate");
 
-        if (ImGui::Button("Story"))
+        if (ApplicationManager::Instance().GetAutomatorManager().HasAController())
         {
-            mainAutomatorController.StackAutomator(std::make_unique<StoryQuestAutomator>());
-            mainAutomatorController.StartAutomator();
-        }
-        ImGui::Button("Sub Stories");
-        ImGui::Button("Retry");
-
-        ImGui::EndChild();
-
-        if (mainAutomatorController.HasAnAutomator())
-        {
+            ImGui::Text("Current automator: %s", ApplicationManager::Instance().GetAutomatorManager().GetController().automator->ToString().c_str());
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-            if (ImGui::Button("Stop automate"))
+            if (ImGui::Button("Stop"))
             {
-                mainAutomatorController.StopAutomator();
-                mainAutomatorController.PopStackAutomator();
+                ApplicationManager::Instance().GetAutomatorManager().PopAllAutomator();
             }
 
             ImGui::PopStyleColor();
         }
+        else
+        {
+            if (ImGui::Button("Story"))
+            {
+                ApplicationManager::Instance().GetAutomatorManager().StackAutomator(AutomatorController(std::make_unique<StoryQuestAutomator>()));
+            }
+            ImGui::Button("Sub Stories");
+            ImGui::Button("Retry");
+        }
+
+        ImGui::EndChild();
 
         ImGui::End();
 

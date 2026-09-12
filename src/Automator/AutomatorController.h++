@@ -1,26 +1,20 @@
 ﻿#pragma once
-#include <stack>
-#include <thread>
-
 #include "Automator.h++"
-#include "SellCharactersAutomator.h++"
+#include <opencv2/core/mat.hpp>
+#include <boost/coroutine2/all.hpp>
+
 
 
 class AutomatorController
 {
     public:
-        ~AutomatorController();
+        std::unique_ptr<Automator> automator;
 
-        void StackAutomator(std::unique_ptr<Automator> automator_);
-        void PopStackAutomator();
-        void StartAutomator();
-        void StopAutomator();
-        void PopAndStopAllAutomator();
-        [[nodiscard]] bool HasAnAutomator() const;
-        [[nodiscard]] Automator* GetCurrentAutomator() const;
+        explicit AutomatorController(std::unique_ptr<Automator>&& automator);
+
+        void Update(const cv::Mat& gameScreenshot);
 
     private:
-        std::stack<std::unique_ptr<Automator>> automators;
-        Automator* currentAutomator = nullptr;
-        std::jthread automatorThead;
+        std::optional<boost::coroutines2::coroutine<void>::pull_type> sequence;
+        cv::Mat currentGameScreenshot;
 };

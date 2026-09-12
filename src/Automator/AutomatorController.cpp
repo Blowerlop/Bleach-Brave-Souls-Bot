@@ -1,77 +1,20 @@
 ﻿#include "AutomatorController.h++"
 
-#include <iostream>
-#include <thread>
 
-#include "SellCharactersAutomator.h++"
-
-AutomatorController::~AutomatorController()
+AutomatorController::AutomatorController(std::unique_ptr<Automator>&& automator)
+    : automator(std::move(automator))
 {
-    if (currentAutomator == nullptr) return;
-
-    StopAutomator();
 }
 
-void AutomatorController::StackAutomator(std::unique_ptr<Automator> automator_)
+void AutomatorController::Update(const cv::Mat& gameScreenshot)
 {
-    automators.push(std::move(automator_));
-    currentAutomator = automators.top().get();
-}
+    currentGameScreenshot = gameScreenshot;
 
-void AutomatorController::PopStackAutomator()
-{
-    if (!automators.empty())
+    if (!sequence)
     {
-        auto automator = automators.top().get();
-        if (automator == currentAutomator)
-        {
-            std::cerr << "Pop automator without stopping it first." << std::endl;
-        }
-
-        automators.pop();
-        currentAutomator = nullptr;
+        sequence.emplace([this] (boost::coroutines2::coroutine<void>::push_type& yield) { automator->Update(yield, currentGameScreenshot);  });
     }
-}
+    else (*sequence)();
 
-void AutomatorController::StartAutomator()
-{
-    if (currentAutomator == nullptr)
-    {
-        std::cerr << "No automator to start." << std::endl;
-        return;
-    }
-
-    automatorThead = std::jthread([this](const std::stop_token& stopToken)
-    {
-        currentAutomator->Run(stopToken);
-    });
-}
-
-void AutomatorController::StopAutomator()
-{
-    if (currentAutomator == nullptr)
-    {
-        std::cerr << "No automator to stop." << std::endl;
-        return;
-    }
-
-    automatorThead.request_stop();
-}
-
-void AutomatorController::PopAndStopAllAutomator()
-{
-    while (!automators.empty())
-    {
-        automators.pop();
-    }
-}
-
-bool AutomatorController::HasAnAutomator() const
-{
-    return currentAutomator != nullptr;
-}
-
-Automator* AutomatorController::GetCurrentAutomator() const
-{
-    return currentAutomator;
+    if (!*sequence) sequence.reset();
 }

@@ -1,103 +1,98 @@
 ﻿#include "SellCharactersAutomator.h++"
 
+#include "../ApplicationManager.h++"
 #include "../Settings.h++"
+#include "../TemplateMatching.h++"
 
-bool SellCharactersAutomator::HasSell() const
+void SellCharactersAutomator::Update(boost::coroutines2::coroutine<void>::push_type& yield,
+                                     const cv::Mat& gameScreenshot)
 {
-    return hasSell;
-}
+    Automator::Update(yield, gameScreenshot);
 
-void SellCharactersAutomator::RunSequence(boost::coroutines2::coroutine<void>::push_type& yield)
-{
+    const auto& applicationManager = ApplicationManager::Instance();
     cv::Point coordinate;
     const std::string assetsPath = "assets/Inventory/Characters/Sell/";
 
-    if (!DoesScreenshotMatchTemplate(assetsPath + "CharacterList.jpg", coordinate)) yield();
-    PointAndClick(coordinate);
+    if (!TemplateMatching::Match(gameScreenshot, assetsPath + "CharacterList.jpg", coordinate)) yield();
+    applicationManager.PointAndClick(coordinate);
 
-    while (!DoesScreenshotMatchTemplate(assetsPath + "Sell.jpg", coordinate)) yield();
-    PointAndClick(coordinate);
+    while (!TemplateMatching::Match(gameScreenshot, assetsPath + "Sell.jpg", coordinate)) yield();
+    applicationManager.PointAndClick(coordinate);
 
-    while (!DoesScreenshotMatchTemplate(assetsPath + "MultiSelect.jpg", coordinate)) yield();
-    PointAndClick(coordinate);
+    while (!TemplateMatching::Match(gameScreenshot, assetsPath + "MultiSelect.jpg", coordinate)) yield();
+    applicationManager.PointAndClick(coordinate);
 
-    while (!DoesScreenshotMatchTemplate(assetsPath + "Reset.jpg", coordinate)) yield();
-    PointAndClick(coordinate);
+    while (!TemplateMatching::Match(gameScreenshot, assetsPath + "Reset.jpg", coordinate)) yield();
+    applicationManager.PointAndClick(coordinate);
     yield();
 
     switch (Settings::sellRarity.load())
     {
         case Settings::SellRarity::ONE_STARS_ONLY:
-            DoesScreenshotMatchTemplate(assetsPath + "RarityOneStarsOnly.jpg", coordinate);
+            TemplateMatching::Match(gameScreenshot, assetsPath + "RarityOneStarsOnly.jpg", coordinate);
             break;
         case Settings::SellRarity::TWO_STARS_OR_LOWER:
-            DoesScreenshotMatchTemplate(assetsPath + "RarityTwoStarsOrLower.jpg", coordinate);
+            TemplateMatching::Match(gameScreenshot, assetsPath + "RarityTwoStarsOrLower.jpg", coordinate);
             break;
         case Settings::SellRarity::THREE_STARS_OR_LOWER:
-            DoesScreenshotMatchTemplate(assetsPath + "RarityThreeStarsOrLower.jpg", coordinate);
+            TemplateMatching::Match(gameScreenshot, assetsPath + "RarityThreeStarsOrLower.jpg", coordinate);
             break;
         case Settings::SellRarity::FOUR_STARS_OR_LOWER:
-            DoesScreenshotMatchTemplate(assetsPath + "RarityFourStarsOrLower.jpg", coordinate);
+            TemplateMatching::Match(gameScreenshot, assetsPath + "RarityFourStarsOrLower.jpg", coordinate);
             break;
         case Settings::SellRarity::FIVE_STARS_OR_LOWER:
-            DoesScreenshotMatchTemplate(assetsPath + "RarityFiveStarsOrLower.jpg", coordinate);
+            TemplateMatching::Match(gameScreenshot, assetsPath + "RarityFiveStarsOrLower.jpg", coordinate);
             break;
 
         default:
             break;
     }
-    PointAndClick(coordinate);
+    applicationManager.PointAndClick(coordinate);
 
     switch (Settings::sellLevel.load())
     {
         case Settings::SellLevel::ONE_ONLY:
-            DoesScreenshotMatchTemplate(assetsPath + "LevelOneOnly.jpg", coordinate);
+            TemplateMatching::Match(gameScreenshot, assetsPath + "LevelOneOnly.jpg", coordinate);
             break;
 
         case Settings::SellLevel::ALL:
-            DoesScreenshotMatchTemplate(assetsPath + "LevelAll.jpg", coordinate);
+            TemplateMatching::Match(gameScreenshot, assetsPath + "LevelAll.jpg", coordinate);
             break;
     }
-    PointAndClick(coordinate);
+    applicationManager.PointAndClick(coordinate);
 
     switch (Settings::sellBadge.load())
     {
         case Settings::SellBadge::ONLY:
-            DoesScreenshotMatchTemplate(assetsPath + "BadgeOnly.jpg", coordinate);
+            TemplateMatching::Match(gameScreenshot, assetsPath + "BadgeOnly.jpg", coordinate);
             break;
 
         case Settings::SellBadge::ALL:
-            DoesScreenshotMatchTemplate(assetsPath + "BadgeAll.jpg", coordinate);
+            TemplateMatching::Match(gameScreenshot, assetsPath + "BadgeAll.jpg", coordinate);
             break;
     }
-    PointAndClick(coordinate);
+    applicationManager.PointAndClick(coordinate);
 
-    DoesScreenshotMatchTemplate(assetsPath + "Select.jpg", coordinate);
-    PointAndClick(coordinate);
+    TemplateMatching::Match(gameScreenshot, assetsPath + "Select.jpg", coordinate);
+    applicationManager.PointAndClick(coordinate);
 
-    while (!DoesScreenshotMatchTemplate(assetsPath + "Sell2.jpg", coordinate)) yield();
-    PointAndClick(coordinate);
+    while (!TemplateMatching::Match(gameScreenshot, assetsPath + "Sell2.jpg", coordinate)) yield();
+    applicationManager.PointAndClick(coordinate);
 
-    while (!DoesScreenshotMatchTemplate(assetsPath + "Ok.jpg", coordinate)) yield();
-    PointAndClick(coordinate);
+    while (!TemplateMatching::Match(gameScreenshot, assetsPath + "Ok.jpg", coordinate)) yield();
+    applicationManager.PointAndClick(coordinate);
 
-    while (!DoesScreenshotMatchTemplate(assetsPath + "Close.jpg", coordinate)) yield();
-    PointAndClick(coordinate);
+    while (!TemplateMatching::Match(gameScreenshot, assetsPath + "Close.jpg", coordinate)) yield();
+    applicationManager.PointAndClick(coordinate);
 
-    while (!DoesScreenshotMatchTemplate("assets/Back.jpg", coordinate)) yield();
-    PointAndClick(coordinate);
+    while (!TemplateMatching::Match(gameScreenshot, "assets/Back.jpg", coordinate)) yield();
+    applicationManager.PointAndClick(coordinate);
     yield();
 
-    hasSell.store(true);
+    onCompleted();
 }
 
-void SellCharactersAutomator::Update(const std::stop_token& stopToken)
+std::string SellCharactersAutomator::ToString() const
 {
-    Automator::Update(stopToken);
-
-    if (!sequence)
-    {
-        sequence.emplace([this](boost::coroutines2::coroutine<void>::push_type& yield) { RunSequence(yield); });
-    }
-    else if (*sequence) (*sequence)();
+    return "Selling characters";
 }

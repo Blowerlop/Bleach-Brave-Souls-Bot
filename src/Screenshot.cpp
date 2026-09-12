@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-HBITMAP  Screenshot::Window(HWND hWnd)
+HBITMAP Screenshot::Window(HWND hWnd)
 {
     HBITMAP hbmScreen = nullptr;
     HDC hdcWindow = nullptr;
@@ -12,15 +12,16 @@ HBITMAP  Screenshot::Window(HWND hWnd)
     hdcWindow = GetWindowDC(hWnd);
     if (!hdcWindow)
     {
-        std::cerr << "GetWindowDC has failed" << std::endl;
+        throw std::runtime_error("GetWindowDC has failed");
         return nullptr;
     }
 
     hdcMemDC = CreateCompatibleDC(hdcWindow);
     if (!hdcMemDC)
     {
-        std::cerr << "CreateCompatibleDC has failed" << std::endl;
         ReleaseDC(hWnd, hdcWindow);
+
+        throw std::runtime_error("CreateCompatibleDC has failed");
         return nullptr;
     }
 
@@ -32,9 +33,10 @@ HBITMAP  Screenshot::Window(HWND hWnd)
     hbmScreen = CreateCompatibleBitmap(hdcWindow, width, height);
     if (!hbmScreen)
     {
-        std::cerr << "CreateCompatibleBitmap Failed" << std::endl;
         DeleteDC(hdcMemDC);
         ReleaseDC(hWnd, hdcWindow);
+
+        throw std::runtime_error("CreateCompatibleBitmap has failed");
         return nullptr;
     }
 
@@ -42,11 +44,12 @@ HBITMAP  Screenshot::Window(HWND hWnd)
 
     if (!PrintWindow(hWnd, hdcMemDC, PW_RENDERFULLCONTENT))
     {
-        std::cerr << "PrintWindow has failed" << std::endl;
         SelectObject(hdcMemDC, hOld);
         DeleteObject(hbmScreen);
         DeleteDC(hdcMemDC);
         ReleaseDC(hWnd, hdcWindow);
+
+        throw std::runtime_error("PrintWindow has failed");
         return nullptr;
     }
 

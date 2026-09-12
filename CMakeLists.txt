@@ -179,10 +179,12 @@ target_link_directories(Bleach-Brave-Souls-Bot PRIVATE
 )
 # private sourcefiles from sourcebatch c++.build for target Bleach-Brave-Souls-Bot
 target_sources(Bleach-Brave-Souls-Bot PRIVATE 
+    src/ApplicationManager.cpp
     src/AssetsManager.cpp
     src/AutoClicker.cpp
     src/Automator/Automator.cpp
     src/Automator/AutomatorController.cpp
+    src/Automator/AutomatorManager.cpp
     src/Automator/SellCharactersAutomator.cpp
     src/Automator/StoryQuestAutomator.cpp
     src/BitmapConverter.cpp
@@ -190,7 +192,7 @@ target_sources(Bleach-Brave-Souls-Bot PRIVATE
     src/Process.cpp
     src/Screenshot.cpp
     src/TemplateMatching.cpp
-    src/Watcher/FullChararactersCapacityWatcher.cpp
+    src/Watcher/FullCharactersCapacityWatcher.cpp
     src/Watcher/Watcher.cpp
     src/Watcher/WatcherController.cpp
     src/Watcher/WatcherManager.cpp

@@ -18,6 +18,4 @@ class WatcherManager
     private:
         std::vector<WatcherController> controllers;
         std::jthread thread;
-
-        [[nodiscard]] cv::Mat TakeGameScreenshot() const;
 };

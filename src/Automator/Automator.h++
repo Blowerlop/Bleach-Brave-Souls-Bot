@@ -1,27 +1,19 @@
 ﻿#pragma once
-#include <stop_token>
 
-#include "../BitmapConverter.h++"
 
+#include <opencv2/core/mat.hpp>
+#include <boost/coroutine2/all.hpp>
+#include <boost/signals2/signal.hpp>
 
 class Automator
 {
     public:
         virtual ~Automator() = default;
 
-        void Run(const std::stop_token& stopToken);
+        virtual void Update(boost::coroutines2::coroutine<void>::push_type& yield, const cv::Mat& gameScreenshot);
+        [[nodiscard]] virtual std::string ToString() const = 0;
 
-    protected:
-        virtual void Start();
-        virtual void Update(const std::stop_token& stopStoken);
+        friend std::ostream& operator<<(std::ostream& os, const Automator& automator);
 
-        bool DoesScreenshotMatchTemplate(const cv::String& file, cv::Point& coordinate) const;
-        void PointAndClick(cv::Point coordinate) const;
-
-    private:
-        HWND windowHandle = nullptr;
-        static DWORD GetProcessId();
-        static HWND GetWindowHandle(DWORD pid);
-        
-        cv::Mat currentScreenshotMat;
+        boost::signals2::signal<void()> onCompleted;
 };

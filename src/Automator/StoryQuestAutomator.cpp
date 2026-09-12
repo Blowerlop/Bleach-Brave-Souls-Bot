@@ -1,113 +1,87 @@
 ﻿#include "StoryQuestAutomator.h++"
 
-#include <atomic>
-#include <future>
-
-#include "AutomatorController.h++"
-#include "SellCharactersAutomator.h++"
+#include "../ApplicationManager.h++"
 #include "../Settings.h++"
+#include "../TemplateMatching.h++"
 
-void StoryQuestAutomator::Update(const std::stop_token& stopToken)
+void StoryQuestAutomator::Update(boost::coroutines2::coroutine<void>::push_type& yield,
+    const cv::Mat& gameScreenshot)
 {
-    Automator::Update(stopToken);
+    Automator::Update(yield, gameScreenshot);
 
-    if (!sequence)
-    {
-        sequence.emplace([stopToken, this](boost::coroutines2::coroutine<void>::push_type& yield)
-        {
-            RunSequence(stopToken, yield);
-        });
-    }
-    else (*sequence)();
-
-    if (!*sequence) sequence.reset();
-}
-
-void StoryQuestAutomator::RunSequence(const std::stop_token& stopToken,
-                                      boost::coroutines2::coroutine<void>::push_type& yield)
-{
+    const auto& applicationManager = ApplicationManager::Instance();
     cv::Point coordinate;
 
-    if (DoesScreenshotMatchTemplate("assets/Inventory/Characters/Sell/CharacterList.jpg", coordinate))
-    {
-        AutomatorController automatorController;
-        automatorController.StackAutomator(std::make_unique<SellCharactersAutomator>());
-        automatorController.StartAutomator();
-
-        auto* automator = dynamic_cast<SellCharactersAutomator*>(automatorController.GetCurrentAutomator());
-        while (!stopToken.stop_requested() && !automator->HasSell())
-        {
-            // noop
-        }
-
-        automatorController.StopAutomator();
-    }
-
-    if (DoesScreenshotMatchTemplate("assets/Quests/Solo.jpg", coordinate))
+    if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo.jpg", coordinate))
     {
         cv::Point _;
 
         // The loading can cause a click to be missed, so we need to click until the next screen is loaded.
         do
         {
-            PointAndClick(coordinate);
+            applicationManager.PointAndClick(coordinate);
             yield();
+
         }
-        while (DoesScreenshotMatchTemplate("assets/Quests/Solo.jpg", coordinate) && !DoesScreenshotMatchTemplate("assets/Quests/Solo/Story.jpg", _));
+        while (TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo.jpg", coordinate) && !TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/Story.jpg", _));
 
-        while (!DoesScreenshotMatchTemplate("assets/Quests/Solo/Story.jpg", coordinate)) yield();
-        PointAndClick(coordinate);
+        while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/Story.jpg", coordinate)) yield();
+        applicationManager.PointAndClick(coordinate);
 
-        while (!DoesScreenshotMatchTemplate("assets/Quests/Solo/Story/CurrentQuestSlot.jpg", coordinate)) yield();
+        while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/Story/CurrentQuestSlot.jpg", coordinate)) yield();
 
         // The animation can cause a click to be missed, so we need to click until the animation is finished.
         do
         {
-            PointAndClick(coordinate);
+            applicationManager.PointAndClick(coordinate);
             yield();
         }
-        while (!DoesScreenshotMatchTemplate("assets/PrepareForQuest.jpg", _));
+        while (!TemplateMatching::Match(gameScreenshot, "assets/PrepareForQuest.jpg", _));
     }
 
-    if (DoesScreenshotMatchTemplate("assets/PrepareForQuest.jpg", coordinate))
+    if (TemplateMatching::Match(gameScreenshot, "assets/PrepareForQuest.jpg", coordinate))
     {
-        PointAndClick(coordinate);
+        applicationManager.PointAndClick(coordinate);
         return;
     }
 
     // Immediate action. Don't need to wait for a loading before doing anything so don't return.
-    if (Settings::useStatsBoost.load() && DoesScreenshotMatchTemplate("assets/UseStatsBoost.jpg", coordinate))
+    if (Settings::useStatsBoost.load() && TemplateMatching::Match(gameScreenshot, "assets/UseStatsBoost.jpg", coordinate))
     {
-        PointAndClick(coordinate);
+        applicationManager.PointAndClick(coordinate);
     }
 
-    if (DoesScreenshotMatchTemplate("assets/StartQuest.jpg", coordinate))
+    if (TemplateMatching::Match(gameScreenshot, "assets/StartQuest.jpg", coordinate))
     {
-        PointAndClick(coordinate);
+        applicationManager.PointAndClick(coordinate);
         return;
     }
 
-    if (DoesScreenshotMatchTemplate("assets/Skip.jpg", coordinate))
+    if (TemplateMatching::Match(gameScreenshot, "assets/Skip.jpg", coordinate))
     {
-        PointAndClick(coordinate);
+        applicationManager.PointAndClick(coordinate);
         return;
     }
 
-    if (DoesScreenshotMatchTemplate("assets/TapScreen.jpg", coordinate))
+    if (TemplateMatching::Match(gameScreenshot, "assets/TapScreen.jpg", coordinate))
     {
-        PointAndClick(coordinate);
+        applicationManager.PointAndClick(coordinate);
         return;
     }
 
-    if (DoesScreenshotMatchTemplate("assets/NextQuest.jpg", coordinate))
+    if (TemplateMatching::Match(gameScreenshot, "assets/NextQuest.jpg", coordinate))
     {
-        PointAndClick(coordinate);
+        applicationManager.PointAndClick(coordinate);
         return;
     }
 
-    if (DoesScreenshotMatchTemplate("assets/QuestClear.jpg", coordinate))
+    if (TemplateMatching::Match(gameScreenshot, "assets/QuestClear.jpg", coordinate))
     {
-        PointAndClick(coordinate);
-        return;
+        applicationManager.PointAndClick(coordinate);
     }
+}
+
+std::string StoryQuestAutomator::ToString() const
+{
+    return "Quest";
 }
