@@ -185,8 +185,10 @@ target_sources(Bleach-Brave-Souls-Bot PRIVATE
     src/Automator/Automator.cpp
     src/Automator/AutomatorController.cpp
     src/Automator/AutomatorManager.cpp
-    src/Automator/RetryAutomator.cpp
+    src/Automator/BuySoulTicketsAutomator.cpp
+    src/Automator/DailyAutomator.cpp
     src/Automator/SellCharactersAutomator.cpp
+    src/Automator/SoloRetryAutomator.cpp
     src/Automator/StoryAutomator.cpp
     src/BitmapConverter.cpp
     src/main.cpp
@@ -194,6 +196,7 @@ target_sources(Bleach-Brave-Souls-Bot PRIVATE
     src/Screenshot.cpp
     src/TemplateMatching.cpp
     src/Watcher/FullCharactersCapacityWatcher.cpp
+    src/Watcher/NotEnoughSoulTicketsWatcher.cpp
     src/Watcher/Watcher.cpp
     src/Watcher/WatcherController.cpp
     src/Watcher/WatcherManager.cpp

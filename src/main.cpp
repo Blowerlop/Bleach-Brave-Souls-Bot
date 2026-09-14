@@ -31,6 +31,7 @@
 #include "Watcher/FullCharactersCapacityWatcher.h++"
 #include "Watcher/WatcherManager.h++"
 #include "Automator/AutomatorManager.h++"
+#include "Automator/DailyAutomator.h++"
 #include "Automator/SoloRetryAutomator.h++"
 
 // Volk headers
@@ -573,7 +574,20 @@ int main(int, char**)
             Settings::sellBadge.store(currentElementSellBadge);
         }
 
-
+        Settings::BuySoulTicketsAmount buySoulTicketsAmount = Settings::buySoulTicketsAmount.load();
+        if (ImGui::BeginCombo("Buy Soul Tickets Amount", std::string(magic_enum::enum_name(buySoulTicketsAmount)).c_str()))
+        {
+            for (auto name : magic_enum::enum_names<Settings::BuySoulTicketsAmount>())
+            {
+                bool selected = (magic_enum::enum_name(buySoulTicketsAmount) == name);
+                if (ImGui::Selectable(std::string(name).c_str(), selected))
+                    buySoulTicketsAmount = magic_enum::enum_cast<Settings::BuySoulTicketsAmount>(name).value();
+                if (selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
+        Settings::buySoulTicketsAmount.store(buySoulTicketsAmount);
 
         ImGui::EndChild();
 
@@ -586,7 +600,12 @@ int main(int, char**)
 
         if (ApplicationManager::Instance().GetAutomatorManager().HasAController())
         {
-            ImGui::Text("Current automator: %s", ApplicationManager::Instance().GetAutomatorManager().GetController().automator->ToString().c_str());
+            auto automator = ApplicationManager::Instance().GetAutomatorManager().GetController().automator.get();
+            if (automator != nullptr)
+            {
+                ImGui::Text("Current: %s", automator->ToString().c_str());
+            }
+
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
 
             if (ImGui::Button("Stop"))
@@ -611,6 +630,11 @@ int main(int, char**)
             if (ImGui::Button("Solo Retry"))
             {
                 ApplicationManager::Instance().GetAutomatorManager().StackAutomator(AutomatorController(std::make_unique<SoloRetryAutomator>()));
+            }
+
+            if (ImGui::Button("Daily"))
+            {
+                ApplicationManager::Instance().GetAutomatorManager().StackAutomator(AutomatorController(std::make_unique<DailyAutomator>()));
             }
         }
 

@@ -7,8 +7,10 @@
 #include "Process.h++"
 #include "Screenshot.h++"
 #include "Window.h++"
+#include "Automator/BuySoulTicketsAutomator.h++"
 #include "Automator/SellCharactersAutomator.h++"
 #include "Watcher/FullCharactersCapacityWatcher.h++"
+#include "Watcher/NotEnoughSoulTicketsWatcher.h++"
 
 
 ApplicationManager::ApplicationManager()
@@ -25,19 +27,34 @@ ApplicationManager::ApplicationManager()
     automatorManager.StartRunControllersThread();
 
     // Watcher
-    auto fullCharactersCapacityWatcher = std::make_unique<FullCharactersCapacityWatcher>();
-    fullCharactersCapacityWatcher->onWatchProblem.connect([this]
+    std::unique_ptr<Watcher> watcher;
+
+    watcher = std::make_unique<FullCharactersCapacityWatcher>();
+    watcher->onWatchProblem.connect([this]
     {
-        auto sellCharactersAutomator = std::make_unique<SellCharactersAutomator>();
-        sellCharactersAutomator->onCompleted.connect([this]
+        auto automator = std::make_unique<SellCharactersAutomator>();
+        automator->onCompleted.connect([this]
         {
-            automatorManager.PopAutomator();
+            std::thread([this] { automatorManager.PopAutomator(); }).detach();
         });
 
-        this->automatorManager.StackAutomator(AutomatorController(std::move(sellCharactersAutomator)));
+        this->automatorManager.StackAutomator(AutomatorController(std::move(automator)));
     });
+    watcherManager.AddController(WatcherController(std::move(watcher)));
 
-    watcherManager.AddController(WatcherController(std::move(fullCharactersCapacityWatcher)));
+    watcher = std::make_unique<NotEnoughSoulTicketsWatcher>();
+    watcher->onWatchProblem.connect([this]
+    {
+        auto automator = std::make_unique<BuySoulTicketsAutomator>();
+        automator->onCompleted.connect([this]
+        {
+            std::thread([this] { automatorManager.PopAutomator(); }).detach();
+        });
+
+        this->automatorManager.StackAutomator(AutomatorController(std::move(automator)));
+    });
+    watcherManager.AddController(WatcherController(std::move(watcher)));
+
     watcherManager.StartRunControllersThread();
 }
 

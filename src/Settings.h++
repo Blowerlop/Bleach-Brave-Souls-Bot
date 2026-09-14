@@ -25,11 +25,18 @@ class Settings
             ALL
         };
 
+        enum class BuySoulTicketsAmount
+        {
+            FIVE,
+            TWENTY_FIVE,
+            FIFTY
+        };
+
         static inline std::atomic<float> automatorUpdateDelayInSeconds{1.0f};
         static inline std::atomic<bool> useStatsBoost{true};
         static inline std::atomic<bool> automaticallySellCharactersIfMaximumCapacityReached{true};
         static inline std::atomic<SellRarity> sellRarity{SellRarity::THREE_STARS_OR_LOWER};
         static inline std::atomic<SellLevel> sellLevel{SellLevel::ALL};
         static inline std::atomic<SellBadge> sellBadge{SellBadge::ONLY};
-
+        static inline std::atomic<BuySoulTicketsAmount> buySoulTicketsAmount{BuySoulTicketsAmount::TWENTY_FIVE};
 };
