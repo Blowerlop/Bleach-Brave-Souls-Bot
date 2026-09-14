@@ -8,9 +8,11 @@
 #include "Screenshot.h++"
 #include "Window.h++"
 #include "Automator/BuySoulTicketsAutomator.h++"
+#include "Automator/PlayerRankUpConfirmAutomator.h++"
 #include "Automator/SellCharactersAutomator.h++"
 #include "Watcher/FullCharactersCapacityWatcher.h++"
 #include "Watcher/NotEnoughSoulTicketsWatcher.h++"
+#include "Watcher/PlayerRankUpWatcher.h++"
 
 
 ApplicationManager::ApplicationManager()
@@ -46,6 +48,19 @@ ApplicationManager::ApplicationManager()
     watcher->onWatchProblem.connect([this]
     {
         auto automator = std::make_unique<BuySoulTicketsAutomator>();
+        automator->onCompleted.connect([this]
+        {
+            std::thread([this] { automatorManager.PopAutomator(); }).detach();
+        });
+
+        this->automatorManager.StackAutomator(AutomatorController(std::move(automator)));
+    });
+    watcherManager.AddController(WatcherController(std::move(watcher)));
+
+    watcher = std::make_unique<PlayerRankUpWatcher>();
+    watcher->onWatchProblem.connect([this]
+    {
+        auto automator = std::make_unique<PlayerRankUpConfirmAutomator>();
         automator->onCompleted.connect([this]
         {
             std::thread([this] { automatorManager.PopAutomator(); }).detach();

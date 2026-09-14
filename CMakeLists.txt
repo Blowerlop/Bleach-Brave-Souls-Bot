@@ -197,6 +197,7 @@ target_sources(Bleach-Brave-Souls-Bot PRIVATE
     src/TemplateMatching.cpp
     src/Watcher/FullCharactersCapacityWatcher.cpp
     src/Watcher/NotEnoughSoulTicketsWatcher.cpp
+    src/Watcher/PlayerRankUpWatcher.cpp
     src/Watcher/Watcher.cpp
     src/Watcher/WatcherController.cpp
     src/Watcher/WatcherManager.cpp
