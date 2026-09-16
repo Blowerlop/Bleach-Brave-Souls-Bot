@@ -26,11 +26,30 @@ void DailyAutomator::Update(boost::coroutines2::coroutine<void>::push_type& yiel
     {
         applicationManager.PointAndClick(coordinate);
         yield();
+
     }
 
     if (TemplateMatching::Match(gameScreenshot, "assets/Quests/PrepareForQuest.jpg", coordinate))
     {
         applicationManager.PointAndClick(coordinate);
+        currentQuest++;
+    }
+
+    const int currentTeam = Settings::dailyTeam[currentQuest];
+    const std::string filePath = "assets/Team/" + std::to_string(currentTeam) + ".jpg";
+    for (int i = 0; i < currentTeam; i++)
+    {
+        if (TemplateMatching::Match(gameScreenshot, filePath, coordinate))
+        {
+            applicationManager.PointAndClick(coordinate);
+        }
+        else
+        {
+            TemplateMatching::Match(gameScreenshot, "assets/Team/Next.jpg", coordinate);
+            applicationManager.PointAndClick(coordinate);
+        }
+
+        yield();
     }
 
     if (Settings::useStatsBoost.load() && TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/UseStatsBoost.jpg", coordinate))
@@ -58,17 +77,8 @@ void DailyAutomator::Update(boost::coroutines2::coroutine<void>::push_type& yiel
         applicationManager.PointAndClick(coordinate);
     }
 
-    if (TemplateMatching::Match(gameScreenshot, "assets/Quests/TapScreen.jpg", coordinate))
-    {
-        applicationManager.PointAndClick(coordinate);
-        return;
-    }
-
-    if (TemplateMatching::Match(gameScreenshot, "assets/Quests/TapScreen.jpg", coordinate))
-    {
-        applicationManager.PointAndClick(coordinate);
-        return;
-    }
+    while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/TapScreen.jpg", coordinate)) yield();
+    applicationManager.PointAndClick(coordinate);
 
     if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Close.jpg", coordinate))
     {

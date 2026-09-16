@@ -39,4 +39,5 @@ class Settings
         static inline std::atomic<SellLevel> sellLevel{SellLevel::ALL};
         static inline std::atomic<SellBadge> sellBadge{SellBadge::ONLY};
         static inline std::atomic<BuySoulTicketsAmount> buySoulTicketsAmount{BuySoulTicketsAmount::TWENTY_FIVE};
+        static inline std::array<int, 10> dailyTeam {};
 };

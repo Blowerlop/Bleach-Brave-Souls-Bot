@@ -618,6 +618,18 @@ int main()
         }
         Settings::buySoulTicketsAmount.store(buySoulTicketsAmount);
 
+        if (ImGui::BeginListBox("Daily team indexs"))
+        {
+            auto& values = Settings::dailyTeam;
+
+            for (size_t i = 0; i < values.size(); i++) {
+                std::string label = "Quest " + std::to_string(i + 1);
+                ImGui::InputInt(label.c_str(), &values[i]);
+            }
+
+            ImGui::EndListBox();
+        }
+
         ImGui::EndChild();
 
         ImGui::SameLine();
