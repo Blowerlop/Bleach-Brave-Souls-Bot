@@ -361,9 +361,38 @@ static void FramePresent(ImGui_ImplVulkanH_Window* wd)
     wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->SemaphoreCount; // Now we can use the next set of semaphores
 }
 
-// Main code
-int main(int, char**)
+static void OnTerminate()
 {
+    std::string message;
+
+    if (auto exceptionPtr = std::current_exception())
+    {
+        try
+        {
+            std::rethrow_exception(exceptionPtr);
+        }
+        catch (const std::exception& e)
+        {
+            message = e.what();
+        }
+        catch (...)
+        {
+            message = "Unknown exception type (does not derive from std::exception).";
+        }
+    }
+
+    if (!message.empty())
+    {
+        MessageBox(nullptr, message.c_str(), "Fatal Error", MB_ICONERROR | MB_OK);
+    }
+
+    std::exit(1);
+}
+
+// Main code
+int main()
+{
+    std::set_terminate(OnTerminate);
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
         return 1;
