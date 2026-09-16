@@ -177,6 +177,10 @@ target_link_directories(Bleach-Brave-Souls-Bot PRIVATE
     C:/Users/chris/AppData/Local/.xmake/packages/v/vulkan-loader/1.4.335+0/faac6c747f5f4c18b32d2c968be37765/lib
     C:/Users/chris/AppData/Local/.xmake/packages/b/boost/1.90.0/4b3d389fa3354e2e9de3afdd154991f1/lib
 )
+target_link_options(Bleach-Brave-Souls-Bot PRIVATE
+    /SUBSYSTEM:WINDOWS
+    /ENTRY:mainCRTStartup
+)
 # private sourcefiles from sourcebatch c++.build for target Bleach-Brave-Souls-Bot
 target_sources(Bleach-Brave-Souls-Bot PRIVATE 
     src/ApplicationManager.cpp
@@ -187,6 +191,7 @@ target_sources(Bleach-Brave-Souls-Bot PRIVATE
     src/Automator/AutomatorManager.cpp
     src/Automator/BuySoulTicketsAutomator.cpp
     src/Automator/DailyAutomator.cpp
+    src/Automator/PlayerRankUpConfirmAutomator.cpp
     src/Automator/SellCharactersAutomator.cpp
     src/Automator/SoloRetryAutomator.cpp
     src/Automator/StoryAutomator.cpp
