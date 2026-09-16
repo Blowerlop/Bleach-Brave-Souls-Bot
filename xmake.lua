@@ -11,6 +11,10 @@ target("Bleach-Brave-Souls-Bot")
     add_packages("opencv", "imgui", "vulkan-loader", "boost", "magic_enum")
     add_defines("NOMINMAX")
 
+    if is_plat("windows") then
+            add_ldflags("/SUBSYSTEM:WINDOWS", "/ENTRY:mainCRTStartup", {force = true})
+    end
+
     after_build(function (target)
             local assetDirectory = path.join(target:targetdir(), "assets")
                 os.mkdir(assetDirectory)
