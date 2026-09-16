@@ -494,7 +494,8 @@ int main()
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-    ApplicationManager::Instance();
+    auto& _ = ApplicationManager::Instance();
+    Settings::Load();
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -536,9 +537,9 @@ int main()
         float fullWidth = ImGui::GetContentRegionAvail().x;
         float leftWidth = fullWidth * 0.5f;
 
-        ImGui::BeginChild("Options", ImVec2(leftWidth, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY);
+        ImGui::BeginChild("Settings", ImVec2(leftWidth, 0), ImGuiChildFlags_Borders | ImGuiChildFlags_AutoResizeY);
 
-        ImGui::Text("Options");
+        ImGui::Text("Settings");
 
         if (float temp = Settings::automatorUpdateDelayInSeconds.load(); ImGui::InputFloat("Automator update delay in seconds", &temp))
         {
@@ -708,6 +709,8 @@ int main()
     }
 
     // Cleanup
+    Settings::Save();
+
     err = vkDeviceWaitIdle(g_Device);
     check_vk_result(err);
     ImGui_ImplVulkan_Shutdown();

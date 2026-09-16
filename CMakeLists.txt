@@ -37,9 +37,10 @@ target_include_directories(Bleach-Brave-Souls-Bot SYSTEM PRIVATE
     C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/263a39cd1a204a72b22c4efe942b5e31/include/misc/cpp
     C:/Users/chris/AppData/Local/.xmake/packages/g/glfw/3.4/d59f6dd71e7647cc95d2c1d35e51a39a/include
     C:/Users/chris/AppData/Local/.xmake/packages/v/vulkan-headers/1.4.335+0/9a6e360bbd30447880dba7b3b100d7dc/include
-    C:/Users/chris/AppData/Local/.xmake/packages/b/boost/1.90.0/4b3d389fa3354e2e9de3afdd154991f1/include
+    C:/Users/chris/AppData/Local/.xmake/packages/b/boost/1.92.0/c92833d6a80e438f9693f16a87037b4c/include
     C:/Users/chris/AppData/Local/.xmake/packages/m/magic_enum/v0.9.8/786729aa62a84d67b93b5916593d62cb/include
     C:/Users/chris/AppData/Local/.xmake/packages/m/magic_enum/v0.9.8/786729aa62a84d67b93b5916593d62cb/include/magic_enum
+    C:/Users/chris/AppData/Local/.xmake/packages/n/nlohmann_json/v3.12.0/ab8414047c424750bdc9d7a0ff7afdde/include
 )
 target_compile_definitions(Bleach-Brave-Souls-Bot PRIVATE
     NOMINMAX
@@ -175,7 +176,7 @@ target_link_directories(Bleach-Brave-Souls-Bot PRIVATE
     C:/Users/chris/AppData/Local/.xmake/packages/i/imgui/v1.92.9-docking/263a39cd1a204a72b22c4efe942b5e31/lib
     C:/Users/chris/AppData/Local/.xmake/packages/g/glfw/3.4/d59f6dd71e7647cc95d2c1d35e51a39a/lib
     C:/Users/chris/AppData/Local/.xmake/packages/v/vulkan-loader/1.4.335+0/faac6c747f5f4c18b32d2c968be37765/lib
-    C:/Users/chris/AppData/Local/.xmake/packages/b/boost/1.90.0/4b3d389fa3354e2e9de3afdd154991f1/lib
+    C:/Users/chris/AppData/Local/.xmake/packages/b/boost/1.92.0/c92833d6a80e438f9693f16a87037b4c/lib
 )
 target_link_options(Bleach-Brave-Souls-Bot PRIVATE
     /SUBSYSTEM:WINDOWS
