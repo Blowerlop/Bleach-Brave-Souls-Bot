@@ -8,6 +8,13 @@ void SoloRetryAutomator::Update(boost::coroutines2::coroutine<void>::push_type& 
 {
     Automator::Update(yield, gameScreenshot);
 
+    if (retryCount >= Settings::maxRetry.load())
+    {
+        onCompleted();
+        return;
+    }
+
+
     const auto& applicationManager = ApplicationManager::Instance();
     cv::Point coordinate;
 
@@ -23,6 +30,11 @@ void SoloRetryAutomator::Update(boost::coroutines2::coroutine<void>::push_type& 
         return;
     }
 
+    if (TemplateMatching::Match(gameScreenshot, "assets/Quests/ItemsObtained.jpg", coordinate))
+    {
+        applicationManager.PointAndClick(coordinate);
+    }
+
     if (TemplateMatching::Match(gameScreenshot, "assets/Quests/TapScreen.jpg", coordinate))
     {
         applicationManager.PointAndClick(coordinate);
@@ -32,10 +44,11 @@ void SoloRetryAutomator::Update(boost::coroutines2::coroutine<void>::push_type& 
     if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Retry.jpg", coordinate))
     {
         applicationManager.PointAndClick(coordinate);
+        retryCount++;
     }
 }
 
 std::string SoloRetryAutomator::ToString() const
 {
-    return "Retry";
+    return std::format("Retry: {} times", retryCount);
 }

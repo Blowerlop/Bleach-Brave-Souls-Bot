@@ -44,6 +44,7 @@ class Settings
         static inline std::atomic<SellLevel> sellLevel{SellLevel::ALL};
         static inline std::atomic<SellBadge> sellBadge{SellBadge::ONLY};
         static inline std::atomic<BuySoulTicketsAmount> buySoulTicketsAmount{BuySoulTicketsAmount::TWENTY_FIVE};
+        static inline std::atomic<int> maxRetry = std::numeric_limits<int>::max();
         static inline std::array<int, 10> dailyTeam{};
 
 
@@ -59,6 +60,7 @@ class Settings
             json["sellLevel"] = sellLevel.load();
             json["sellBadge"] = sellBadge.load();
             json["buySoulTicketsAmount"] = buySoulTicketsAmount.load();
+            json["maxRetry"] = maxRetry.load();
             json["dailyTeam"] = dailyTeam;
 
             return json;
@@ -88,6 +90,8 @@ class Settings
 
             buySoulTicketsAmount.store(static_cast<BuySoulTicketsAmount>(
                 json.value("buySoulTicketsAmount", static_cast<int>(buySoulTicketsAmount.load()))));
+
+            maxRetry.store(json.value("maxRetry", maxRetry.load()));
 
             dailyTeam = json.value("dailyTeam", dailyTeam);
         }

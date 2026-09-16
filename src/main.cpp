@@ -558,6 +558,8 @@ int main()
 
         if (Settings::automaticallySellCharactersIfMaximumCapacityReached.load())
         {
+            ImGui::Indent();
+
             Settings::SellRarity currentElementSellRarity = Settings::sellRarity.load();
             if (ImGui::BeginCombo("Sell Rarity", std::string(magic_enum::enum_name(currentElementSellRarity)).c_str()))
             {
@@ -602,6 +604,8 @@ int main()
                 ImGui::EndCombo();
             }
             Settings::sellBadge.store(currentElementSellBadge);
+
+            ImGui::Unindent();
         }
 
         Settings::BuySoulTicketsAmount buySoulTicketsAmount = Settings::buySoulTicketsAmount.load();
@@ -619,17 +623,29 @@ int main()
         }
         Settings::buySoulTicketsAmount.store(buySoulTicketsAmount);
 
-        if (ImGui::BeginListBox("Daily team indexs"))
+        if (ImGui::CollapsingHeader("Retry quests"))
         {
-            auto& values = Settings::dailyTeam;
-
-            for (size_t i = 0; i < values.size(); i++) {
-                std::string label = "Quest " + std::to_string(i + 1);
-                ImGui::InputInt(label.c_str(), &values[i]);
+            if (int temp = Settings::maxRetry.load(); ImGui::InputInt("Max retry", &temp))
+            {
+                Settings::maxRetry.store(temp);
             }
-
-            ImGui::EndListBox();
         }
+
+        if (ImGui::CollapsingHeader("Daily Quests"))
+        {
+            if (ImGui::BeginListBox("Daily team"))
+            {
+                auto& values = Settings::dailyTeam;
+
+                for (size_t i = 0; i < values.size(); i++) {
+                    std::string label = "Quest " + std::to_string(i + 1);
+                    ImGui::InputInt(label.c_str(), &values[i]);
+                }
+
+                ImGui::EndListBox();
+            }
+        }
+
 
         ImGui::EndChild();
 
@@ -671,7 +687,13 @@ int main()
 
             if (ImGui::Button("Solo Retry"))
             {
-                ApplicationManager::Instance().GetAutomatorManager().StackAutomator(AutomatorController(std::make_unique<SoloRetryAutomator>()));
+                auto automator = std::make_unique<SoloRetryAutomator>();
+                automator->onCompleted.connect([]
+                {
+                    std::thread([] { ApplicationManager::Instance().GetAutomatorManager().PopAutomator(); }).detach();
+                });
+
+                ApplicationManager::Instance().GetAutomatorManager().StackAutomator(AutomatorController(std::move(automator)));
             }
 
             if (ImGui::Button("Daily"))
