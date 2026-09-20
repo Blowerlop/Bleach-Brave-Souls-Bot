@@ -7,7 +7,7 @@
 #include "Process.h++"
 #include "Screenshot.h++"
 #include "Window.h++"
-#include "Automator/BuySoulTicketsAutomator.h++"
+#include "Automator/RefillTicketsAutomator.h++"
 #include "Automator/PlayerRankUpConfirmAutomator.h++"
 #include "Automator/SellCharactersAutomator.h++"
 #include "Watcher/FullCharactersCapacityWatcher.h++"
@@ -47,7 +47,7 @@ ApplicationManager::ApplicationManager()
     watcher = std::make_unique<NotEnoughSoulTicketsWatcher>();
     watcher->onWatchProblem.connect([this]
     {
-        auto automator = std::make_unique<BuySoulTicketsAutomator>();
+        auto automator = std::make_unique<RefillTicketsAutomator>();
         automator->onCompleted.connect([this]
         {
             std::thread([this] { automatorManager.PopAutomator(); }).detach();
