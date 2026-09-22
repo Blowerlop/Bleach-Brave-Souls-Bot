@@ -88,7 +88,6 @@ void StoryAutomator::Update(boost::coroutines2::coroutine<void>::push_type& yiel
         yield();
     }
 
-    tapScreen:
     while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/TapScreen.jpg", coordinate))
     {
         if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/Skip.jpg", coordinate))
@@ -99,10 +98,6 @@ void StoryAutomator::Update(boost::coroutines2::coroutine<void>::push_type& yiel
         // The automator sold characters and we are back to the main menu.
         // We can't next quest anymore, so we just finish this sequence and re-do it from the start.
         if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo.jpg", coordinate)) return;
-        if (TemplateMatching::Match(gameScreenshot, "assets/Quests/TapScreen.jpg", coordinate))
-        {
-            goto tapScreen;
-        }
 
         yield();
     }
