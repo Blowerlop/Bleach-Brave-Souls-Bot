@@ -400,13 +400,15 @@ int main()
 
     // Create window with Vulkan context
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
     float main_scale = ImGui_ImplGlfw_GetContentScaleForMonitor(glfwGetPrimaryMonitor()); // Valid on GLFW 3.3+ only
-    GLFWwindow* window = glfwCreateWindow((int)(1280 * main_scale), (int)(800 * main_scale), "Dear ImGui GLFW+Vulkan example", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(1, 1, "Bleach Brave Souls bot", nullptr, nullptr);
     if (!glfwVulkanSupported())
     {
         printf("GLFW: Vulkan Not Supported\n");
         return 1;
     }
+    glfwHideWindow(window);
 
     ImVector<const char*> extensions;
     uint32_t extensions_count = 0;
@@ -434,7 +436,7 @@ int main()
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
-    //io.ConfigViewportsNoAutoMerge = true;
+    io.ConfigViewportsNoAutoMerge = true;
     //io.ConfigViewportsNoTaskBarIcon = true;
 
     // Setup Dear ImGui style
@@ -497,6 +499,7 @@ int main()
 
     auto& _ = ApplicationManager::Instance();
     Settings::Load();
+    bool open = true;
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -533,7 +536,12 @@ int main()
         // First implementation
         // TODO: Better implementation
 
-        ImGui::Begin("Bleach Brave Souls bot");
+        ImGui::Begin("Bleach Brave Souls bot", &open);
+
+        if (!open)
+        {
+            glfwSetWindowShouldClose(window, GLFW_TRUE);
+        }
 
         float fullWidth = ImGui::GetContentRegionAvail().x;
         float leftWidth = fullWidth * 0.5f;
