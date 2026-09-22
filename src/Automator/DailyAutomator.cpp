@@ -23,6 +23,11 @@ void DailyAutomator::Update(boost::coroutines2::coroutine<void>::push_type& yiel
         {
             goto questSelected;
         }
+
+        if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo.jpg", coordinate))
+        {
+            onCompleted();
+        }
     }
     applicationManager.PointAndClick(coordinate);
 

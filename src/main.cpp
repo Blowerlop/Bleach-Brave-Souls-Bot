@@ -699,7 +699,13 @@ int main()
 
             if (ImGui::Button("Daily"))
             {
-                ApplicationManager::Instance().GetAutomatorManager().StackAutomator(AutomatorController(std::make_unique<DailyAutomator>()));
+                auto automator = std::make_unique<DailyAutomator>();
+                automator->onCompleted.connect([]
+                {
+                    std::thread([] { ApplicationManager::Instance().GetAutomatorManager().PopAutomator(); }).detach();
+                });
+
+                ApplicationManager::Instance().GetAutomatorManager().StackAutomator(AutomatorController(std::move(automator)));
             }
         }
 
