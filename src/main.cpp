@@ -33,6 +33,7 @@
 #include "Automator/AutomatorManager.h++"
 #include "Automator/DailyAutomator.h++"
 #include "Automator/SoloRetryAutomator.h++"
+#include "Automator/SubStoriesAutomator.h++"
 
 // Volk headers
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
@@ -682,7 +683,7 @@ int main()
 
             if (ImGui::Button("Sub Stories"))
             {
-                // noop
+                ApplicationManager::Instance().GetAutomatorManager().StackAutomator(AutomatorController(std::make_unique<SubStoriesAutomator>()));
             }
 
             if (ImGui::Button("Solo Retry"))
