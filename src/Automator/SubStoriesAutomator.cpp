@@ -30,9 +30,18 @@ void SubStoriesAutomator::Update(boost::coroutines2::coroutine<void>::push_type&
 
     TemplateMatching::Match(gameScreenshot, "assets/SubStories.jpg", coordinate);
     applicationManager.PointAndClick(coordinate);
+    yield();
 
     selectSubStories:
-    while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/SubStories/New.jpg", coordinate)) yield();
+    while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/SubStories/New.jpg", coordinate))
+    {
+        // We had the popup of maximum characters in inventory.
+        // The automator sold characters and we are back to the main menu.
+        // We can't next quest anymore, so we just finish this sequence and re-do it from the start.
+        if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo.jpg", coordinate)) return;
+
+        yield();
+    }
     applicationManager.PointAndClick(coordinate);
     yield();
 
@@ -45,6 +54,7 @@ void SubStoriesAutomator::Update(boost::coroutines2::coroutine<void>::push_type&
 
         yield();
     }
+
     if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Close.jpg", coordinate))
     {
         applicationManager.PointAndClick(coordinate);
