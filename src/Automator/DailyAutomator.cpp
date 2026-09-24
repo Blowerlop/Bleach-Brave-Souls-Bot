@@ -79,20 +79,26 @@ void DailyAutomator::Update(boost::coroutines2::coroutine<void>::push_type& yiel
         yield();
     }
 
-    while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/TapScreen.jpg", coordinate)) yield();
-    applicationManager.PointAndClick(coordinate);
-
-    acceptRewards:
-    if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Close.jpg", coordinate))
+    while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/TapScreen.jpg", coordinate))
     {
-        applicationManager.PointAndClick(coordinate);
+        if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Close.jpg", coordinate))
+        {
+            applicationManager.PointAndClick(coordinate);
+            yield();
+        }
+
         yield();
     }
+    applicationManager.PointAndClick(coordinate);
 
     while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/Retry.jpg", coordinate))
     {
+        if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Close.jpg", coordinate))
+        {
+            applicationManager.PointAndClick(coordinate);
+        }
+
         yield();
-        goto acceptRewards;
     }
     applicationManager.PointAndClick(coordinate);
 }
