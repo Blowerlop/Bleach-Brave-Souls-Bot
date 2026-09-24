@@ -45,9 +45,11 @@ bool RefillTicketsAutomator::CollectSoulsTickets(boost::coroutines2::coroutine<v
         yield();
     }
 
-    TemplateMatching::Match(gameScreenshot, "assets/GiftBox.jpg", coordinate);
-    applicationManager.PointAndClick(coordinate);
-    yield();
+    while (TemplateMatching::Match(gameScreenshot, "assets/GiftBox.jpg", coordinate))
+    {
+        applicationManager.PointAndClick(coordinate);
+        yield();
+    }
 
     while (!TemplateMatching::Match(gameScreenshot, "assets/GiftBox/SoulTicket.jpg", coordinate)) yield();
     applicationManager.PointAndClick(coordinate);
