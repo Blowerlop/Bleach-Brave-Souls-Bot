@@ -45,12 +45,21 @@ void SubStoriesAutomator::Update(boost::coroutines2::coroutine<void>::push_type&
     applicationManager.PointAndClick(coordinate);
     yield();
 
+    byte index = 0;
     while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/SubStories/New.jpg", coordinate))
     {
         if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Close.jpg", coordinate))
         {
             applicationManager.PointAndClick(coordinate);
         }
+
+        if (TemplateMatching::Match(gameScreenshot, std::format("assets/Quests/Solo/SubStories/{}.jpg", index + 1), coordinate))
+        {
+            applicationManager.PointAndClick(coordinate);
+        }
+
+        // Hard coded but can change in the future if sub stories pages increase beyond 5
+        index = (index + 1) % 5;
 
         yield();
     }
