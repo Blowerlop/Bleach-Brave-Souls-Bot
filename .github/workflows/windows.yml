@@ -1,0 +1,58 @@
+name: Windows
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  PROJECT_NAME: Bleach-Brave-Souls-Bot
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Setup xmake
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          xmake-version: latest
+          actions-cache-folder: ".xmake-cache"
+          actions-cache-key: "windows-x64"
+
+      - name: Update xmake repository
+        run: xmake repo --update
+
+      - name: Configure xmake
+        run: xmake f -y -m release -p windows -a x64
+
+      - name: Build
+        run: xmake -y
+
+      - name: Package build output
+        shell: pwsh
+        run: |
+          $buildDir = "build\windows\x64\release"
+          $zipName  = "$env:PROJECT_NAME-windows-x64.zip"
+          Compress-Archive -Path "$buildDir\*" -DestinationPath $zipName
+          echo "ARCHIVE_NAME=$zipName" >> $env:GITHUB_ENV
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-x64
+          path: ${{ env.ARCHIVE_NAME }}
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ARCHIVE_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
