@@ -642,16 +642,12 @@ int main()
 
         if (ImGui::CollapsingHeader("Daily Quests"))
         {
-            if (ImGui::BeginListBox("Daily team"))
-            {
-                auto& values = Settings::dailyTeam;
+            ImGui::Text("Daily team");
+            auto& values = Settings::dailyTeam;
 
-                for (size_t i = 0; i < values.size(); i++) {
-                    std::string label = "Quest " + std::to_string(i + 1);
-                    ImGui::InputInt(label.c_str(), &values[i]);
-                }
-
-                ImGui::EndListBox();
+            for (size_t i = 0; i < values.size(); i++) {
+                std::string label = "Quest " + std::to_string(i + 1);
+                ImGui::InputInt(label.c_str(), &values[i]);
             }
         }
 
