@@ -1,8 +1,8 @@
 set_languages("c++23")
 add_rules("mode.debug", "mode.release")
-add_requires("opencv", "vulkan-loader", "magic_enum", "nlohmann_json")
+add_requires("opencv 4.14.0", "vulkan-loader 1.4.335+0", "magic_enum v0.9.8", "nlohmann_json v3.12.0")
 add_requires("imgui 1.92.9-docking", {configs = {glfw = true, vulkan = true}})
-add_requires("boost", {configs = {coroutine = true, signals = true}})
+add_requires("boost 1.92.0", {configs = {coroutine = true, signals = true}})
 
 target("Bleach-Brave-Souls-Bot")
     set_kind("binary")
