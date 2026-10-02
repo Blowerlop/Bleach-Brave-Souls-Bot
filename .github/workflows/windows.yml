@@ -25,9 +25,8 @@ jobs:
           xmake-version: latest
           actions-cache-folder: ".xmake-cache"
           actions-cache-key: "windows-x64"
-
-      - name: Update xmake repository
-        run: xmake repo --update
+          package-cache: true
+          package-cache-key: "windows-x64"
 
       - name: Configure xmake
         run: xmake f -y -m release -p windows -a x64
