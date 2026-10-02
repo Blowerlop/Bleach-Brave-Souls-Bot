@@ -13,7 +13,7 @@
 
 [Requirements](#requirements) · [Download](#download) · [Quick start](#quick-start) · [Features](#features) · [Build from source](#build-from-source)
 
-<img src="assets/README/Application.jpg" alt="Bleach Brave Souls Bot user interface" width="700">
+<img src="docs/images/Application.jpg" alt="Bleach Brave Souls Bot user interface" width="700">
 
 </div>
 
