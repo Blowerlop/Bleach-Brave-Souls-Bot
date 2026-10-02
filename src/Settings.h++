@@ -1,5 +1,8 @@
 ﻿#pragma once
 
+#include <windows.h>
+#include <shlobj.h>
+#include <filesystem>
 #include <fstream>
 
 #include "nlohmann/json.hpp"
@@ -100,14 +103,14 @@ class Settings
         {
             try
             {
-                std::filesystem::path path(relativeFilePath);
+                std::filesystem::path path(filePath);
                 while (path.has_parent_path() && !std::filesystem::exists(path.parent_path()))
                 {
                     path = path.parent_path();
                     std::filesystem::create_directories(path);
                 }
 
-                std::ofstream file(relativeFilePath);
+                std::ofstream file(filePath);
                 if (!file.is_open())
                 {
                     throw std::runtime_error(std::format("Settings::Save could not open file"));
@@ -125,7 +128,7 @@ class Settings
         static void Load()
         {
             // The file is not created, we need to save it first to create the default settings file.
-            if (!std::filesystem::exists(relativeFilePath))
+            if (!std::filesystem::exists(filePath))
             {
                 Save();
                 return;
@@ -133,7 +136,7 @@ class Settings
 
             try
             {
-                std::ifstream file(relativeFilePath);
+                std::ifstream file(filePath);
                 if (!file.is_open())
                 {
                     throw std::runtime_error(std::format("Settings::Load could not open file"));
@@ -152,5 +155,21 @@ class Settings
         }
 
     private:
-        static const inline std::string relativeFilePath = "config/settings.json";
+        // Stored in %APPDATA% so the settings survive a rebuild or an update of the application.
+        static std::filesystem::path GetFilePath()
+        {
+            PWSTR appDataPath = nullptr;
+            if (FAILED(SHGetKnownFolderPath(FOLDERID_RoamingAppData, 0, nullptr, &appDataPath)))
+            {
+                CoTaskMemFree(appDataPath);
+                throw std::runtime_error("Settings could not find the AppData folder");
+            }
+
+            std::filesystem::path path(appDataPath);
+            CoTaskMemFree(appDataPath);
+
+            return path / "Bleach-Brave-Souls-Bot" / "settings.json";
+        }
+
+        static const inline std::filesystem::path filePath = GetFilePath();
 };

@@ -7,7 +7,7 @@ add_requires("boost 1.92.0", {configs = {coroutine = true, signals = true}})
 target("Bleach-Brave-Souls-Bot")
     set_kind("binary")
     add_files("src/**.cpp")
-    add_syslinks("user32")
+    add_syslinks("user32", "shell32", "ole32")
     add_packages("opencv", "imgui", "vulkan-loader", "boost", "magic_enum", "nlohmann_json")
     add_defines("NOMINMAX")
 
