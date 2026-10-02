@@ -74,7 +74,26 @@ void SubStoriesAutomator::Update(boost::coroutines2::coroutine<void>::push_type&
     applicationManager.PointAndClick(coordinate);
 
 
-    while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/SubStories/NoStars.jpg", coordinate)) yield();
+    while (!(TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/SubStories/NoStars.jpg", coordinate) || TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/SubStories/StoryOnly.jpg", coordinate))) yield();
+
+    if (TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/SubStories/StoryOnly.jpg", coordinate))
+    {
+        applicationManager.PointAndClick(coordinate);
+
+        while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/Skip.jpg", coordinate)) yield();
+        applicationManager.PointAndClick(coordinate);
+
+        while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/Solo/Story/QuestClear.jpg", coordinate)) yield();
+        applicationManager.PointAndClick(coordinate);
+
+        while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/Close.jpg", coordinate)) yield();
+        applicationManager.PointAndClick(coordinate);
+
+        while (!TemplateMatching::Match(gameScreenshot, "assets/Back.jpg", coordinate)) yield();
+        applicationManager.PointAndClick(coordinate);
+
+        goto selectSubStories;
+    }
     applicationManager.PointAndClick(coordinate);
 
     while (!TemplateMatching::Match(gameScreenshot, "assets/Quests/PrepareForQuest.jpg", coordinate)) yield();
